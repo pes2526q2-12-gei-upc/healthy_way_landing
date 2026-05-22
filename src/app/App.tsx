@@ -178,10 +178,10 @@ export default function App() {
             {/* Left: Headline & CTA */}
             <div className="text-white space-y-4">
               <div className="flex justify-center">
-                <img src="/logo.png" alt="Healthy Way" className="h-28 w-auto" />
+                <img src="logo-full-removebg-preview.png" alt="Healthy Way" className="h-28 w-auto" />
               </div>
               <h1 className="text-3xl lg:text-4xl font-bold leading-tight">
-                Descobreix les Rutes més Saludables per al teu Entrenament—Respira Aire Net, Assoleix el Màxim Rendiment
+                Descobreix les rutes més saludables per al teu entrenament—Respira aire net, assoleix el màxim rendiment
               </h1>
 
               <p className="text-base lg:text-lg text-blue-50">
@@ -211,7 +211,7 @@ export default function App() {
                 </div>
                 <div>
                   <div className="text-2xl font-bold">95%</div>
-                  <div className="text-blue-100 text-sm">Taxa d'Èxit</div>
+                  <div className="text-blue-100 text-sm">Atletes </div>
                 </div>
                 <div>
                   <div className="text-2xl font-bold">1M+</div>
@@ -245,7 +245,7 @@ export default function App() {
               <MapPin className="w-7 h-7 text-blue-600" />
             </div>
             <h3 className="text-2xl font-bold text-gray-900 mb-4">Recomanacions de Rutes Intel·ligents</h3>
-            <p className="text-gray-600">Rutes optimitzades amb IA per a la qualitat de l'aire, les condicions meteorològiques i els teus objectius de fitness.</p>
+            <p className="text-gray-600">Rutes recomanades per a la qualitat de l'aire, les condicions meteorològiques i els teus objectius de fitness.</p>
           </div>
 
           <div className="bg-white p-8 rounded-2xl shadow-lg hover:shadow-xl transition-shadow scroll-animate">
@@ -348,24 +348,24 @@ export default function App() {
 
         <div className="bg-white rounded-3xl shadow-xl p-12 scroll-animate">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-12 items-center justify-items-center mb-12">
-            <div className="grayscale hover:grayscale-0 transition-all opacity-60 hover:opacity-100">
+            <a href="https://www.adidas.es/" target="_blank" rel="noopener noreferrer" className="grayscale hover:grayscale-0 transition-all opacity-60 hover:opacity-100 cursor-pointer">
               <img src="https://images.unsplash.com/photo-1614231125961-38323d6c485b?w=200&h=100&fit=crop" alt="Sponsor 1" className="h-16 w-auto" />
-            </div>
-            <div className="grayscale hover:grayscale-0 transition-all opacity-60 hover:opacity-100">
+            </a>
+            <a href="https://www.reebok.eu/es-es/" target="_blank" rel="noopener noreferrer" className="grayscale hover:grayscale-0 transition-all opacity-60 hover:opacity-100 cursor-pointer">
               <img src="https://images.unsplash.com/photo-1600269453258-30a2e10c72f3?w=200&h=100&fit=crop" alt="Sponsor 2" className="h-16 w-auto" />
-            </div>
-            <div className="grayscale hover:grayscale-0 transition-all opacity-60 hover:opacity-100">
-              <img src="https://images.unsplash.com/photo-1656057903797-175389ce695d?w=200&h=100&fit=crop" alt="Sponsor 3" className="h-16 w-auto" />
-            </div>
-            <div className="grayscale hover:grayscale-0 transition-all opacity-60 hover:opacity-100">
+            </a>
+            <a href="https://www.lululemon.es/es-es/home" target="_blank" rel="noopener noreferrer" className="grayscale hover:grayscale-0 transition-all opacity-60 hover:opacity-100 cursor-pointer">
+              <img src="https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=200&h=100&fit=crop" alt="Sponsor 3" className="h-16 w-auto" />
+            </a>
+            <a href="https://www.nike.com/es/" target="_blank" rel="noopener noreferrer" className="grayscale hover:grayscale-0 transition-all opacity-60 hover:opacity-100 cursor-pointer">
               <img src="https://images.unsplash.com/photo-1610664676282-55c8de64f746?w=200&h=100&fit=crop" alt="Sponsor 4" className="h-16 w-auto" />
-            </div>
+            </a>
           </div>
 
           <div className="text-center">
             <button
               onClick={() => setShowSponsorForm(!showSponsorForm)}
-              className="inline-flex items-center gap-3 bg-gradient-to-r from-blue-600 to-cyan-500 hover:from-blue-700 hover:to-cyan-600 text-white px-10 py-4 rounded-xl text-lg font-semibold transition-all transform hover:scale-105 shadow-lg"
+              className="inline-flex items-center gap-3 bg-gradient-to-r from-blue-600 to-cyan-500 hover:from-blue-700 hover:to-cyan-600 text-white px-10 py-4 rounded-xl text-lg font-semibold transition-all transform hover:scale-105 shadow-lg cursor-pointer"
             >
               <Send className="w-5 h-5" />
               Vols Unir-te a Nosaltres com a Patrocinador?

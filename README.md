@@ -1,35 +1,31 @@
-# Healthy Way — Landing Page
+# Healthy Way Landing
 
-Landing page for **Healthy Way**, a fitness app that recommends healthy running and cycling routes based on real-time air quality and weather data, with team-based territory conquest and community features.
+This is a code bundle for Sports App Landing Page for Healthy Way (Vite + React). The original project is available at https://www.figma.com/design/tkqFBuVjjC3oTERSCdmyUZ/Sports-App-Landing-Page.
 
-## Tech Stack
-
-- [React 18](https://react.dev/) + [TypeScript](https://www.typescriptlang.org/)
-- [Vite 6](https://vitejs.dev/)
-- [Tailwind CSS 4](https://tailwindcss.com/)
-- [shadcn/ui](https://ui.shadcn.com/) component library
-- [Lucide React](https://lucide.dev/) icons
-
-## Getting Started
-
-Install dependencies:
+## Local development
 
 ```bash
-pnpm install
+npm ci
+npm run dev
 ```
 
-Start the development server:
+Open `http://localhost:5173/landing/` (the app is built for subpath `/landing/`).
+
+## Docker
 
 ```bash
-pnpm dev
+docker build -t healthy-way-landing .
+docker run --rm -p 8081:80 healthy-way-landing
 ```
 
-Open [http://localhost:5173](http://localhost:5173) in your browser.
+Then open `http://localhost:8081/landing/`.
 
-## Build
+## CI and CD
 
-```bash
-pnpm build
-```
+GitHub Actions workflows:
 
-Output is generated in the `dist/` folder.
+- `develop` — install and production build
+- `main` — install, build, SonarCloud, deploy on the self-hosted runner
+
+Deploy syncs this repo to `~/healthy-way/landing` on the Virtech VM and rebuilds the `landing` Docker Compose service.
+  

@@ -1,0 +1,67 @@
+name: CI-CD main
+
+on:
+  push:
+    branches: ['main']
+  pull_request:
+    branches: ['main']
+
+jobs:
+  build-and-scan:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+          cache-dependency-path: package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build landing app
+        run: npm run build
+
+      - name: SonarQube Scan
+        uses: SonarSource/sonarcloud-github-action@v3
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        with:
+          projectBaseDir: .
+
+  deploy:
+    needs: build-and-scan
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: self-hosted
+    steps:
+      - name: Download code from GitHub
+        uses: actions/checkout@v4
+
+      - name: Sync code and deploy landing
+        run: |
+          mkdir -p ~/healthy-way/landing
+
+          rsync -av --delete --exclude='.git' ./ ~/healthy-way/landing/
+
+          COMPOSE="$HOME/healthy-way/docker-compose.yml"
+          if [ ! -f "$COMPOSE" ]; then
+            SRC="$HOME/healthy-way/backend/deploy/virtech"
+            if [ ! -f "$SRC/docker-compose.yml" ]; then
+              echo "Missing $COMPOSE. Deploy healthy_way_backend to the VM first."
+              exit 1
+            fi
+            cp -f "$SRC/docker-compose.yml" "$COMPOSE"
+            mkdir -p "$HOME/healthy-way/nginx"
+            cp -f "$SRC/nginx/default.conf" "$HOME/healthy-way/nginx/default.conf"
+          fi
+
+          cd ~/healthy-way
+          docker compose -f docker-compose.yml config >/dev/null
+          docker compose -f docker-compose.yml stop landing
+          docker compose -f docker-compose.yml rm -f landing
+          docker compose -f docker-compose.yml up -d --build landing

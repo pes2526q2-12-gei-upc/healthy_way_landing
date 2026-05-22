@@ -1,13 +1,13 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect } from 'react';
 import { Star, Download, Send, MapPin, Trophy, Users } from 'lucide-react';
+
+const API_BASE_URL = 'http://nattech.fib.upc.edu:40540';
 
 export default function App() {
   const [showSponsorForm, setShowSponsorForm] = useState(false);
   const [formData, setFormData] = useState({
-    companyName: '',
-    contactName: '',
+    company: '',
     email: '',
-    phone: '',
     message: ''
   });
   const [scrollY, setScrollY] = useState(0);
@@ -43,11 +43,21 @@ export default function App() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    alert('Thank you for your interest! We will contact you soon.');
-    setShowSponsorForm(false);
-    setFormData({ companyName: '', contactName: '', email: '', phone: '', message: '' });
+    try {
+      const response = await fetch(`${API_BASE_URL}/api/v1/public/promotions`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formData),
+      });
+      if (!response.ok) throw new Error('Error en enviar la sol·licitud');
+      alert('Gràcies pel teu interès! Ens posarem en contacte amb tu aviat.');
+      setShowSponsorForm(false);
+      setFormData({ company: '', email: '', message: '' });
+    } catch {
+      alert('Hi ha hagut un error en enviar la sol·licitud. Torna-ho a intentar.');
+    }
   };
 
   const maxScroll = typeof window !== 'undefined' && typeof document !== 'undefined' && document.documentElement?.scrollHeight > window.innerHeight
@@ -171,11 +181,11 @@ export default function App() {
                 <img src="/logo.png" alt="Healthy Way" className="h-28 w-auto" />
               </div>
               <h1 className="text-3xl lg:text-4xl font-bold leading-tight">
-                Discover the Healthiest Routes for Your Workout—Breathe Clean Air, Achieve Peak Performance
+                Descobreix les Rutes més Saludables per al teu Entrenament—Respira Aire Net, Assoleix el Màxim Rendiment
               </h1>
 
               <p className="text-base lg:text-lg text-blue-50">
-                Reach your fitness goals in 30 days with smart route recommendations that avoid pollution and adapt to real-time weather—95% of athletes see measurable health improvements.
+                Assoleix els teus objectius de fitness en 30 dies amb recomanacions de rutes intel·ligents que eviten la contaminació i s'adapten al temps en temps real—el 95% dels atletes veuen millores de salut mesurables.
               </p>
 
               <div className="pt-1">
@@ -187,7 +197,7 @@ export default function App() {
                 >
                   <Download className="w-6 h-6" />
                   <div className="text-left">
-                    <div className="text-xs opacity-90">GET IT ON</div>
+                    <div className="text-xs opacity-90">DISPONIBLE A</div>
                     <div className="text-lg font-semibold">Google Play</div>
                   </div>
                 </a>
@@ -197,15 +207,15 @@ export default function App() {
               <div className="grid grid-cols-3 gap-4 pt-3 border-t border-white/20">
                 <div>
                   <div className="text-2xl font-bold">50K+</div>
-                  <div className="text-blue-100 text-sm">Active Athletes</div>
+                  <div className="text-blue-100 text-sm">Atletes Actius</div>
                 </div>
                 <div>
                   <div className="text-2xl font-bold">95%</div>
-                  <div className="text-blue-100 text-sm">Success Rate</div>
+                  <div className="text-blue-100 text-sm">Taxa d'Èxit</div>
                 </div>
                 <div>
                   <div className="text-2xl font-bold">1M+</div>
-                  <div className="text-blue-100 text-sm">Routes Tracked</div>
+                  <div className="text-blue-100 text-sm">Rutes Registrades</div>
                 </div>
               </div>
             </div>
@@ -225,8 +235,8 @@ export default function App() {
       {/* Features Section */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 relative z-10">
         <div className="text-center mb-16 scroll-animate">
-          <h2 className="text-4xl font-bold text-gray-900 mb-4">Why Athletes Love Healthy Way</h2>
-          <p className="text-xl text-gray-600">The only app that combines health, competition, and community</p>
+          <h2 className="text-4xl font-bold text-gray-900 mb-4">Per Què els Atletes Estimen Healthy Way</h2>
+          <p className="text-xl text-gray-600">L'única app que combina salut, competició i comunitat</p>
         </div>
 
         <div className="grid md:grid-cols-3 gap-8">
@@ -234,24 +244,24 @@ export default function App() {
             <div className="w-14 h-14 bg-blue-100 rounded-xl flex items-center justify-center mb-6">
               <MapPin className="w-7 h-7 text-blue-600" />
             </div>
-            <h3 className="text-2xl font-bold text-gray-900 mb-4">Smart Route Recommendations</h3>
-            <p className="text-gray-600">AI-powered routes optimized for air quality, weather conditions, and your fitness goals.</p>
+            <h3 className="text-2xl font-bold text-gray-900 mb-4">Recomanacions de Rutes Intel·ligents</h3>
+            <p className="text-gray-600">Rutes optimitzades amb IA per a la qualitat de l'aire, les condicions meteorològiques i els teus objectius de fitness.</p>
           </div>
 
           <div className="bg-white p-8 rounded-2xl shadow-lg hover:shadow-xl transition-shadow scroll-animate">
             <div className="w-14 h-14 bg-green-100 rounded-xl flex items-center justify-center mb-6">
               <Trophy className="w-7 h-7 text-green-600" />
             </div>
-            <h3 className="text-2xl font-bold text-gray-900 mb-4">Territory Conquest</h3>
-            <p className="text-gray-600">Compete with teams monthly to capture zones and win exclusive prizes from top sports brands.</p>
+            <h3 className="text-2xl font-bold text-gray-900 mb-4">Conquesta de Territoris</h3>
+            <p className="text-gray-600">Competeix amb equips mensualment per capturar zones i guanyar premis exclusius de les millors marques esportives.</p>
           </div>
 
           <div className="bg-white p-8 rounded-2xl shadow-lg hover:shadow-xl transition-shadow scroll-animate">
             <div className="w-14 h-14 bg-purple-100 rounded-xl flex items-center justify-center mb-6">
               <Users className="w-7 h-7 text-purple-600" />
             </div>
-            <h3 className="text-2xl font-bold text-gray-900 mb-4">Community Driven</h3>
-            <p className="text-gray-600">Join teams, share routes, and build lasting connections with fellow athletes.</p>
+            <h3 className="text-2xl font-bold text-gray-900 mb-4">Impulsada per la Comunitat</h3>
+            <p className="text-gray-600">Uneix-te a equips, comparteix rutes i construeix connexions duradores amb altres atletes.</p>
           </div>
         </div>
       </div>
@@ -260,8 +270,8 @@ export default function App() {
       <div className="bg-gradient-to-b from-gray-50 to-white py-20 relative z-10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16 scroll-animate">
-            <h2 className="text-4xl font-bold text-gray-900 mb-4">What Athletes Are Saying</h2>
-            <p className="text-xl text-gray-600">Join thousands of satisfied users</p>
+            <h2 className="text-4xl font-bold text-gray-900 mb-4">Què Diuen els Atletes</h2>
+            <p className="text-xl text-gray-600">Uneix-te a milers d'usuaris satisfets</p>
           </div>
 
           <div className="grid md:grid-cols-3 gap-8">
@@ -279,10 +289,10 @@ export default function App() {
                     <Star key={i} className="w-5 h-5 fill-yellow-400 text-yellow-400" />
                   ))}
                 </div>
-                <p className="text-gray-700 mb-2">"Healthy Way transformed my training! The air quality alerts helped me avoid polluted routes and I've never felt better. Plus, the team competition keeps me motivated every single day!"</p>
+                <p className="text-gray-700 mb-2">"Healthy Way ha transformat el meu entrenament! Les alertes de qualitat de l'aire m'han ajudat a evitar rutes contaminades i mai m'he sentit millor. A més, la competició en equip em manté motivat cada dia!"</p>
               </div>
               <p className="font-semibold text-gray-900">Marc Rodriguez</p>
-              <p className="text-gray-600 text-sm">Professional Cyclist</p>
+              <p className="text-gray-600 text-sm">Ciclista Professional</p>
             </div>
 
             {/* Review 2 */}
@@ -299,10 +309,10 @@ export default function App() {
                     <Star key={i} className="w-5 h-5 fill-yellow-400 text-yellow-400" />
                   ))}
                 </div>
-                <p className="text-gray-700 mb-2">"The gamification is genius! Our team captured 14 zones last month and won Decathlon vouchers. It's not just exercise anymore—it's an adventure with friends!"</p>
+                <p className="text-gray-700 mb-2">"La gamificació és genial! El nostre equip va capturar 14 zones el mes passat i vam guanyar vals de Decathlon. Ja no és només exercici, és una aventura amb amics!"</p>
               </div>
               <p className="font-semibold text-gray-900">Sarah Johnson</p>
-              <p className="text-gray-600 text-sm">Marathon Runner</p>
+              <p className="text-gray-600 text-sm">Corredora de Marató</p>
             </div>
 
             {/* Review 3 */}
@@ -320,10 +330,10 @@ export default function App() {
                   ))}
                   <Star className="w-5 h-5 text-gray-300" />
                 </div>
-                <p className="text-gray-700 mb-2">"As someone new to running, the route recommendations based on weather made it easy to start. I went from zero to 5K in just 30 days! The community support is incredible."</p>
+                <p className="text-gray-700 mb-2">"Com a algú nou al running, les recomanacions de rutes basades en el temps han facilitat el començament. Vaig passar de zero a 5K en només 30 dies! El suport de la comunitat és increïble."</p>
               </div>
               <p className="font-semibold text-gray-900">Alex Chen</p>
-              <p className="text-gray-600 text-sm">Fitness Enthusiast</p>
+              <p className="text-gray-600 text-sm">Entusiasta del Fitness</p>
             </div>
           </div>
         </div>
@@ -332,8 +342,8 @@ export default function App() {
       {/* Sponsors Section */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 relative z-10">
         <div className="text-center mb-16 scroll-animate">
-          <h2 className="text-4xl font-bold text-gray-900 mb-4">Our Amazing Sponsors</h2>
-          <p className="text-xl text-gray-600">Partnering with the best brands in sports</p>
+          <h2 className="text-4xl font-bold text-gray-900 mb-4">Els Nostres Increïbles Patrocinadors</h2>
+          <p className="text-xl text-gray-600">Col·laborant amb les millors marques esportives</p>
         </div>
 
         <div className="bg-white rounded-3xl shadow-xl p-12 scroll-animate">
@@ -358,7 +368,7 @@ export default function App() {
               className="inline-flex items-center gap-3 bg-gradient-to-r from-blue-600 to-cyan-500 hover:from-blue-700 hover:to-cyan-600 text-white px-10 py-4 rounded-xl text-lg font-semibold transition-all transform hover:scale-105 shadow-lg"
             >
               <Send className="w-5 h-5" />
-              Want to Join Us as a Sponsor?
+              Vols Unir-te a Nosaltres com a Patrocinador?
             </button>
           </div>
         </div>
@@ -366,68 +376,43 @@ export default function App() {
         {/* Sponsor Form */}
         {showSponsorForm && (
           <div className="mt-12 bg-gradient-to-br from-blue-50 to-cyan-50 rounded-3xl shadow-xl p-8 md:p-12 scroll-animate animate-pop-in">
-            <h3 className="text-3xl font-bold text-gray-900 mb-6 text-center">Become a Sponsor</h3>
-            <p className="text-gray-600 text-center mb-8">Fill out this form and we'll get back to you within 24 hours</p>
+            <h3 className="text-3xl font-bold text-gray-900 mb-6 text-center">Converteix-te en Patrocinador</h3>
+            <p className="text-gray-600 text-center mb-8">Omple aquest formulari i ens posarem en contacte amb tu en 24 hores</p>
 
             <form onSubmit={handleSubmit} className="max-w-2xl mx-auto space-y-6">
-              <div className="grid md:grid-cols-2 gap-6">
-                <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">Company Name *</label>
-                  <input
-                    type="text"
-                    required
-                    value={formData.companyName}
-                    onChange={(e) => setFormData({...formData, companyName: e.target.value})}
-                    className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition"
-                    placeholder="Your company name"
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">Contact Name *</label>
-                  <input
-                    type="text"
-                    required
-                    value={formData.contactName}
-                    onChange={(e) => setFormData({...formData, contactName: e.target.value})}
-                    className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition"
-                    placeholder="Your full name"
-                  />
-                </div>
-              </div>
-
-              <div className="grid md:grid-cols-2 gap-6">
-                <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">Email *</label>
-                  <input
-                    type="email"
-                    required
-                    value={formData.email}
-                    onChange={(e) => setFormData({...formData, email: e.target.value})}
-                    className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition"
-                    placeholder="email@company.com"
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">Phone</label>
-                  <input
-                    type="tel"
-                    value={formData.phone}
-                    onChange={(e) => setFormData({...formData, phone: e.target.value})}
-                    className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition"
-                    placeholder="+34 600 000 000"
-                  />
-                </div>
+              <div>
+                <label className="block text-sm font-semibold text-gray-700 mb-2">Nom de l'Empresa *</label>
+                <input
+                  type="text"
+                  required
+                  value={formData.company}
+                  onChange={(e) => setFormData({...formData, company: e.target.value})}
+                  className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition"
+                  placeholder="El nom de la teva empresa"
+                />
               </div>
 
               <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-2">Message *</label>
+                <label className="block text-sm font-semibold text-gray-700 mb-2">Correu Electrònic *</label>
+                <input
+                  type="email"
+                  required
+                  value={formData.email}
+                  onChange={(e) => setFormData({...formData, email: e.target.value})}
+                  className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition"
+                  placeholder="email@empresa.com"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-semibold text-gray-700 mb-2">Missatge *</label>
                 <textarea
                   required
                   value={formData.message}
                   onChange={(e) => setFormData({...formData, message: e.target.value})}
                   rows={5}
                   className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition resize-none"
-                  placeholder="Tell us about your brand and why you'd like to partner with Healthy Way..."
+                  placeholder="Explica'ns sobre la teva marca i per què t'agradaria associar-te amb Healthy Way..."
                 />
               </div>
 
@@ -436,14 +421,14 @@ export default function App() {
                   type="submit"
                   className="flex-1 bg-gradient-to-r from-blue-600 to-cyan-500 hover:from-blue-700 hover:to-cyan-600 text-white px-8 py-4 rounded-xl font-semibold transition-all transform hover:scale-105 shadow-lg"
                 >
-                  Submit Application
+                  Enviar Sol·licitud
                 </button>
                 <button
                   type="button"
                   onClick={() => setShowSponsorForm(false)}
                   className="px-8 py-4 rounded-xl font-semibold border-2 border-gray-300 hover:border-gray-400 text-gray-700 transition-all"
                 >
-                  Cancel
+                  Cancel·lar
                 </button>
               </div>
             </form>
@@ -455,10 +440,10 @@ export default function App() {
       <div className="bg-gradient-to-br from-blue-600 via-blue-500 to-cyan-400 py-20 relative z-10">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center scroll-animate">
           <h2 className="text-4xl md:text-5xl font-bold text-white mb-6">
-            Ready to Transform Your Athletic Journey?
+            Preparat per Transformar el Teu Camí Atlètic?
           </h2>
           <p className="text-xl text-blue-50 mb-10">
-            Join 50,000+ athletes conquering territories and achieving their goals
+            Uneix-te a més de 50.000 atletes que conquesten territoris i assoleixen els seus objectius
           </p>
           <a
             href="https://play.google.com/store"
@@ -468,7 +453,7 @@ export default function App() {
           >
             <Download className="w-6 h-6" />
             <div className="text-left">
-              <div className="text-xs opacity-90">DOWNLOAD NOW ON</div>
+              <div className="text-xs opacity-90">DESCARREGA ARA A</div>
               <div className="text-xl">Google Play</div>
             </div>
           </a>
@@ -481,7 +466,7 @@ export default function App() {
           <div className="text-center">
             <p className="text-lg font-semibold text-white mb-2">Healthy Way - The Only Way</p>
             <p className="text-sm">Gamifica el teu esforç</p>
-            <p className="text-sm mt-6">&copy; 2025 Healthy Way. All rights reserved.</p>
+            <p className="text-sm mt-6">&copy; 2025 Healthy Way. Tots els drets reservats.</p>
           </div>
         </div>
       </footer>

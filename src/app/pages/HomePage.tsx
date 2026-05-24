@@ -39,6 +39,10 @@ export default function HomePage() {
   }, []);
 
   useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
+  useEffect(() => {
     const handleScroll = () => {
       setScrollY(window.scrollY);
     };
@@ -183,7 +187,7 @@ export default function HomePage() {
             {/* Left: Headline & CTA */}
             <div className="text-white space-y-4">
               <div className="flex justify-center">
-                <img src="logo-removebg-preview.png" alt="Healthy Way" className="h-28 w-auto" />
+                <img src="logo-full-removebg-preview.png" alt="Healthy Way" className="h-28 w-auto" />
               </div>
               <h1 className="text-3xl lg:text-4xl font-bold leading-tight">
                 {t.heroTitle}

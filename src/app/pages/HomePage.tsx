@@ -3,8 +3,10 @@ import { Link } from 'react-router';
 import { Star, Download, MapPin, Trophy, Users } from 'lucide-react';
 import { fetchApprovedSponsors } from '../api/brandApi';
 import { publicStaticUrl } from '../config';
+import { useLanguage, LANGUAGES, LANG_LABELS } from '../context/LanguageContext';
 
 export default function HomePage() {
+  const { lang, setLang, t } = useLanguage();
   const [sponsors, setSponsors] = useState<{ companyName: string; logoUrl: string | null }[]>([]);
   const [scrollY, setScrollY] = useState(0);
 
@@ -152,10 +154,28 @@ export default function HomePage() {
           50% { transform: translate(-50%, -50%) scale(1.8); opacity: 0.4; }
         }
       `}</style>
+
       {/* Hero Section */}
       <div className="relative overflow-hidden bg-gradient-to-br from-blue-600 via-blue-500 to-cyan-400 z-10 h-screen flex flex-col justify-center">
         <div className="absolute inset-0 opacity-20">
           <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1541625602330-2277a4c46182?w=1920')] bg-cover bg-center"></div>
+        </div>
+
+        {/* Language Switcher */}
+        <div className="absolute top-4 right-4 flex gap-1 z-20">
+          {LANGUAGES.map(l => (
+            <button
+              key={l}
+              onClick={() => setLang(l)}
+              className={`px-3 py-1 rounded text-sm font-semibold transition-all ${
+                lang === l
+                  ? 'bg-white text-blue-600 shadow'
+                  : 'bg-white/20 text-white hover:bg-white/35'
+              }`}
+            >
+              {LANG_LABELS[l]}
+            </button>
+          ))}
         </div>
 
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
@@ -163,14 +183,14 @@ export default function HomePage() {
             {/* Left: Headline & CTA */}
             <div className="text-white space-y-4">
               <div className="flex justify-center">
-                <img src="/logo.png" alt="Healthy Way" className="h-28 w-auto" />
+                <img src="logo-removebg-preview.png" alt="Healthy Way" className="h-28 w-auto" />
               </div>
               <h1 className="text-3xl lg:text-4xl font-bold leading-tight">
-                Descobreix les Rutes més Saludables per al teu Entrenament—Respira Aire Net, Assoleix el Màxim Rendiment
+                {t.heroTitle}
               </h1>
 
               <p className="text-base lg:text-lg text-blue-50">
-                Assoleix els teus objectius de fitness en 30 dies amb recomanacions de rutes intel·ligents que eviten la contaminació i s'adapten al temps en temps real—el 95% dels atletes veuen millores de salut mesurables.
+                {t.heroSubtitle}
               </p>
 
               <div className="pt-1">
@@ -182,7 +202,7 @@ export default function HomePage() {
                 >
                   <Download className="w-6 h-6" />
                   <div className="text-left">
-                    <div className="text-xs opacity-90">DISPONIBLE A</div>
+                    <div className="text-xs opacity-90">{t.downloadAvailable}</div>
                     <div className="text-lg font-semibold">Google Play</div>
                   </div>
                 </a>
@@ -192,15 +212,15 @@ export default function HomePage() {
               <div className="grid grid-cols-3 gap-4 pt-3 border-t border-white/20">
                 <div>
                   <div className="text-2xl font-bold">50K+</div>
-                  <div className="text-blue-100 text-sm">Atletes Actius</div>
+                  <div className="text-blue-100 text-sm">{t.statActiveAthletes}</div>
                 </div>
                 <div>
                   <div className="text-2xl font-bold">95%</div>
-                  <div className="text-blue-100 text-sm">Taxa d'Èxit</div>
+                  <div className="text-blue-100 text-sm">{t.statSuccessRate}</div>
                 </div>
                 <div>
                   <div className="text-2xl font-bold">1M+</div>
-                  <div className="text-blue-100 text-sm">Rutes Registrades</div>
+                  <div className="text-blue-100 text-sm">{t.statRoutes}</div>
                 </div>
               </div>
             </div>
@@ -220,8 +240,8 @@ export default function HomePage() {
       {/* Features Section */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 relative z-10">
         <div className="text-center mb-16 scroll-animate">
-          <h2 className="text-4xl font-bold text-gray-900 mb-4">Per Què els Atletes Estimen Healthy Way</h2>
-          <p className="text-xl text-gray-600">L'única app que combina salut, competició i comunitat</p>
+          <h2 className="text-4xl font-bold text-gray-900 mb-4">{t.featuresTitle}</h2>
+          <p className="text-xl text-gray-600">{t.featuresSubtitle}</p>
         </div>
 
         <div className="grid md:grid-cols-3 gap-8">
@@ -229,24 +249,24 @@ export default function HomePage() {
             <div className="w-14 h-14 bg-blue-100 rounded-xl flex items-center justify-center mb-6">
               <MapPin className="w-7 h-7 text-blue-600" />
             </div>
-            <h3 className="text-2xl font-bold text-gray-900 mb-4">Recomanacions de Rutes Intel·ligents</h3>
-            <p className="text-gray-600">Rutes optimitzades amb IA per a la qualitat de l'aire, les condicions meteorològiques i els teus objectius de fitness.</p>
+            <h3 className="text-2xl font-bold text-gray-900 mb-4">{t.feature1Title}</h3>
+            <p className="text-gray-600">{t.feature1Desc}</p>
           </div>
 
           <div className="bg-white p-8 rounded-2xl shadow-lg hover:shadow-xl transition-shadow scroll-animate">
             <div className="w-14 h-14 bg-green-100 rounded-xl flex items-center justify-center mb-6">
               <Trophy className="w-7 h-7 text-green-600" />
             </div>
-            <h3 className="text-2xl font-bold text-gray-900 mb-4">Conquesta de Territoris</h3>
-            <p className="text-gray-600">Competeix amb equips mensualment per capturar zones i guanyar premis exclusius de les millors marques esportives.</p>
+            <h3 className="text-2xl font-bold text-gray-900 mb-4">{t.feature2Title}</h3>
+            <p className="text-gray-600">{t.feature2Desc}</p>
           </div>
 
           <div className="bg-white p-8 rounded-2xl shadow-lg hover:shadow-xl transition-shadow scroll-animate">
             <div className="w-14 h-14 bg-purple-100 rounded-xl flex items-center justify-center mb-6">
               <Users className="w-7 h-7 text-purple-600" />
             </div>
-            <h3 className="text-2xl font-bold text-gray-900 mb-4">Impulsada per la Comunitat</h3>
-            <p className="text-gray-600">Uneix-te a equips, comparteix rutes i construeix connexions duradores amb altres atletes.</p>
+            <h3 className="text-2xl font-bold text-gray-900 mb-4">{t.feature3Title}</h3>
+            <p className="text-gray-600">{t.feature3Desc}</p>
           </div>
         </div>
       </div>
@@ -255,8 +275,8 @@ export default function HomePage() {
       <div className="bg-gradient-to-b from-gray-50 to-white py-20 relative z-10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16 scroll-animate">
-            <h2 className="text-4xl font-bold text-gray-900 mb-4">Què Diuen els Atletes</h2>
-            <p className="text-xl text-gray-600">Uneix-te a milers d'usuaris satisfets</p>
+            <h2 className="text-4xl font-bold text-gray-900 mb-4">{t.reviewsTitle}</h2>
+            <p className="text-xl text-gray-600">{t.reviewsSubtitle}</p>
           </div>
 
           <div className="grid md:grid-cols-3 gap-8">
@@ -274,10 +294,10 @@ export default function HomePage() {
                     <Star key={i} className="w-5 h-5 fill-yellow-400 text-yellow-400" />
                   ))}
                 </div>
-                <p className="text-gray-700 mb-2">"Healthy Way ha transformat el meu entrenament! Les alertes de qualitat de l'aire m'han ajudat a evitar rutes contaminades i mai m'he sentit millor. A més, la competició en equip em manté motivat cada dia!"</p>
+                <p className="text-gray-700 mb-2">{t.review1Text}</p>
               </div>
               <p className="font-semibold text-gray-900">Marc Rodriguez</p>
-              <p className="text-gray-600 text-sm">Ciclista Professional</p>
+              <p className="text-gray-600 text-sm">{t.review1Role}</p>
             </div>
 
             {/* Review 2 */}
@@ -294,10 +314,10 @@ export default function HomePage() {
                     <Star key={i} className="w-5 h-5 fill-yellow-400 text-yellow-400" />
                   ))}
                 </div>
-                <p className="text-gray-700 mb-2">"La gamificació és genial! El nostre equip va capturar 14 zones el mes passat i vam guanyar vals de Decathlon. Ja no és només exercici, és una aventura amb amics!"</p>
+                <p className="text-gray-700 mb-2">{t.review2Text}</p>
               </div>
               <p className="font-semibold text-gray-900">Sarah Johnson</p>
-              <p className="text-gray-600 text-sm">Corredora de Marató</p>
+              <p className="text-gray-600 text-sm">{t.review2Role}</p>
             </div>
 
             {/* Review 3 */}
@@ -315,10 +335,10 @@ export default function HomePage() {
                   ))}
                   <Star className="w-5 h-5 text-gray-300" />
                 </div>
-                <p className="text-gray-700 mb-2">"Com a algú nou al running, les recomanacions de rutes basades en el temps han facilitat el començament. Vaig passar de zero a 5K en només 30 dies! El suport de la comunitat és increïble."</p>
+                <p className="text-gray-700 mb-2">{t.review3Text}</p>
               </div>
               <p className="font-semibold text-gray-900">Alex Chen</p>
-              <p className="text-gray-600 text-sm">Entusiasta del Fitness</p>
+              <p className="text-gray-600 text-sm">{t.review3Role}</p>
             </div>
           </div>
         </div>
@@ -327,8 +347,8 @@ export default function HomePage() {
       {/* Sponsors Section */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 relative z-10">
         <div className="text-center mb-16 scroll-animate">
-          <h2 className="text-4xl font-bold text-gray-900 mb-4">Els Nostres Increïbles Patrocinadors</h2>
-          <p className="text-xl text-gray-600">Col·laborant amb les millors marques esportives</p>
+          <h2 className="text-4xl font-bold text-gray-900 mb-4">{t.sponsorsTitle}</h2>
+          <p className="text-xl text-gray-600">{t.sponsorsSubtitle}</p>
         </div>
 
         <div className="bg-white rounded-3xl shadow-xl p-12 scroll-animate">
@@ -349,7 +369,7 @@ export default function HomePage() {
               ))
             ) : (
               <p className="col-span-full text-center text-gray-500 text-sm">
-                Les marques col·laboradores apareixeran aquí quan tinguin promocions aprovades.
+                {t.sponsorNoSponsors}
               </p>
             )}
           </div>
@@ -359,7 +379,7 @@ export default function HomePage() {
               to="/brands"
               className="inline-flex items-center gap-3 bg-gradient-to-r from-blue-600 to-cyan-500 hover:from-blue-700 hover:to-cyan-600 text-white px-10 py-4 rounded-xl text-lg font-semibold transition-all transform hover:scale-105 shadow-lg"
             >
-              Col·labora amb nosaltres
+              {t.sponsorCollaborate}
             </Link>
           </div>
         </div>
@@ -369,10 +389,10 @@ export default function HomePage() {
       <div className="bg-gradient-to-br from-blue-600 via-blue-500 to-cyan-400 py-20 relative z-10">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center scroll-animate">
           <h2 className="text-4xl md:text-5xl font-bold text-white mb-6">
-            Preparat per Transformar el Teu Camí Atlètic?
+            {t.ctaTitle}
           </h2>
           <p className="text-xl text-blue-50 mb-10">
-            Uneix-te a més de 50.000 atletes que conquesten territoris i assoleixen els seus objectius
+            {t.ctaSubtitle}
           </p>
           <a
             href="https://play.google.com/store"
@@ -382,7 +402,7 @@ export default function HomePage() {
           >
             <Download className="w-6 h-6" />
             <div className="text-left">
-              <div className="text-xs opacity-90">DESCARREGA ARA A</div>
+              <div className="text-xs opacity-90">{t.ctaDownload}</div>
               <div className="text-xl">Google Play</div>
             </div>
           </a>
@@ -394,8 +414,8 @@ export default function HomePage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center">
             <p className="text-lg font-semibold text-white mb-2">Healthy Way - The Only Way</p>
-            <p className="text-sm">Gamifica el teu esforç</p>
-            <p className="text-sm mt-6">&copy; 2025 Healthy Way. Tots els drets reservats.</p>
+            <p className="text-sm">{t.footerTagline}</p>
+            <p className="text-sm mt-6">{t.footerCopyright}</p>
           </div>
         </div>
       </footer>

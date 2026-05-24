@@ -2,6 +2,9 @@ export type Language = 'ca' | 'es' | 'en';
 
 export const translations = {
   ca: {
+    statSuccessRate: "Taxa d'Èxit",
+    sponsorNoSponsors: 'Les marques col·laboradores apareixeran aquí quan tinguin promocions aprovades.',
+    sponsorCollaborate: 'Col·labora amb nosaltres',
     heroTitle: 'Descobreix les rutes més saludables per al teu entrenament—Respira aire net, assoleix el màxim rendiment',
     heroSubtitle: "Assoleix els teus objectius de fitness en 30 dies amb recomanacions de rutes intel·ligents que eviten la contaminació i s'adapten al temps en temps real—el 95% dels atletes veuen millores de salut mesurables.",
     downloadAvailable: 'DISPONIBLE A',
@@ -46,6 +49,9 @@ export const translations = {
     alertError: "Hi ha hagut un error en enviar la sol·licitud. Torna-ho a intentar.",
   },
   es: {
+    statSuccessRate: 'Tasa de Éxito',
+    sponsorNoSponsors: 'Las marcas colaboradoras aparecerán aquí cuando tengan promociones aprobadas.',
+    sponsorCollaborate: 'Colabora con nosotros',
     heroTitle: 'Descubre las Rutas Más Saludables para tu Entrenamiento—Respira Aire Limpio, Alcanza el Máximo Rendimiento',
     heroSubtitle: 'Alcanza tus objetivos de fitness en 30 días con recomendaciones de rutas inteligentes que evitan la contaminación y se adaptan al tiempo en tiempo real—el 95% de los atletas ven mejoras de salud medibles.',
     downloadAvailable: 'DISPONIBLE EN',
@@ -90,6 +96,9 @@ export const translations = {
     alertError: 'Ha habido un error al enviar la solicitud. Por favor, inténtalo de nuevo.',
   },
   en: {
+    statSuccessRate: 'Success Rate',
+    sponsorNoSponsors: 'Collaborating brands will appear here when they have approved promotions.',
+    sponsorCollaborate: 'Collaborate with us',
     heroTitle: 'Discover the Healthiest Routes for Your Training—Breathe Clean Air, Achieve Peak Performance',
     heroSubtitle: 'Reach your fitness goals in 30 days with smart route recommendations that avoid pollution and adapt to real-time weather—95% of athletes see measurable health improvements.',
     downloadAvailable: 'AVAILABLE ON',

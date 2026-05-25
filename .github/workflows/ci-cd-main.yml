@@ -48,18 +48,6 @@ jobs:
 
           rsync -av --delete --exclude='.git' ./ ~/healthy-way/landing/
 
-          COMPOSE="$HOME/healthy-way/docker-compose.yml"
-          if [ ! -f "$COMPOSE" ]; then
-            SRC="$HOME/healthy-way/backend/deploy/virtech"
-            if [ ! -f "$SRC/docker-compose.yml" ]; then
-              echo "Missing $COMPOSE. Deploy healthy_way_backend to the VM first."
-              exit 1
-            fi
-            cp -f "$SRC/docker-compose.yml" "$COMPOSE"
-            mkdir -p "$HOME/healthy-way/nginx"
-            cp -f "$SRC/nginx/default.conf" "$HOME/healthy-way/nginx/default.conf"
-          fi
-
           cd ~/healthy-way
           docker compose -f docker-compose.yml config >/dev/null
           docker compose -f docker-compose.yml stop landing

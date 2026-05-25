@@ -6,10 +6,19 @@ This is a code bundle for Sports App Landing Page for Healthy Way (Vite + React)
 
 ```bash
 npm ci
+cp .env.example .env   # optional; defaults API to http://localhost:8080
 npm run dev
 ```
 
 Open `http://localhost:5173/landing/` (the app is built for subpath `/landing/`).
+
+Brand logos and other uploads are loaded from `/api/v1/public/static/...` on the backend. The Vite dev server proxies `/api` to the API (see `vite.config.ts`). Ensure the backend is running on port **8080** (Docker) or set `VITE_API_BASE_URL` in `.env`.
+
+Set `VITE_ADMIN_CONTACT_EMAIL` in `.env` so brands see a support mailto link on the portal (login and dashboard).
+
+### App download (APK)
+
+Place the Android package at `public/downloads/healthy-way.apk`, or set `VITE_APP_DOWNLOAD_URL` in `.env` to an external URL. Until the file exists, the download button will return 404 — that is expected during development.
 
 ## Docker
 

@@ -2,15 +2,27 @@ import { API_BASE_URL } from '../config';
 
 const brandBase = `${API_BASE_URL}/api/v1/brands`;
 
+function errorMessageFromApiBody(data: unknown): string | null {
+  const err = data as { error?: string; details?: unknown };
+  if (err.error) return err.error;
+  const details = err.details;
+  if (typeof details === 'object' && details !== null) {
+    if ('message' in details && typeof (details as { message?: string }).message === 'string') {
+      return (details as { message: string }).message;
+    }
+    if ('issues' in details && Array.isArray((details as { issues?: unknown[] }).issues)) {
+      const issues = (details as { issues: { message?: string }[] }).issues;
+      const text = issues.map((i) => i.message).filter(Boolean).join('. ');
+      if (text) return text;
+    }
+  }
+  return null;
+}
+
 async function parseJson(res: Response) {
   const data = await res.json().catch(() => ({}));
   if (!res.ok) {
-    const err = data as { error?: string; details?: unknown };
-    const detailMsg =
-      typeof err.details === 'object' && err.details !== null && 'message' in err.details
-        ? String((err.details as { message?: string }).message)
-        : null;
-    throw new Error(err.error || detailMsg || 'Request failed');
+    throw new Error(errorMessageFromApiBody(data) || 'Request failed');
   }
   return data;
 }
@@ -70,22 +82,34 @@ export async function listBrandPromotions() {
   );
 }
 
-export async function createBrandPromotion(fd: FormData) {
+export type BrandPromotionPayload = {
+  promotionCode: string;
+  description?: string;
+  message?: string;
+  sportModality: string;
+  eligibleWinnerScope: string;
+  validity_start_date?: string;
+  validity_end_date?: string;
+};
+
+export async function createBrandPromotion(body: BrandPromotionPayload) {
   return parseJson(
     await fetch(`${brandBase}/promotions`, {
       method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
       credentials: 'include',
-      body: fd,
+      body: JSON.stringify(body),
     }),
   );
 }
 
-export async function updateBrandPromotion(id: number, fd: FormData) {
+export async function updateBrandPromotion(id: number, body: BrandPromotionPayload) {
   return parseJson(
     await fetch(`${brandBase}/promotions/${id}`, {
       method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
       credentials: 'include',
-      body: fd,
+      body: JSON.stringify(body),
     }),
   );
 }

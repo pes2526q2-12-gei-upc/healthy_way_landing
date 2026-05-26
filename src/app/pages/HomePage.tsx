@@ -161,23 +161,52 @@ export default function HomePage() {
           </div>
 
           <div className="rounded-2xl border border-slate-200 bg-white p-8 sm:p-10">
-            <div className="mb-8 grid grid-cols-2 items-center justify-items-center gap-8 md:grid-cols-4">
+            <div
+              className={[
+                'mb-8',
+                // 1 sponsor: centered hero card; 2+: responsive auto-fit grid
+                sponsors.length === 1
+                  ? 'flex justify-center'
+                  : 'grid justify-center gap-6 [grid-template-columns:repeat(auto-fit,minmax(180px,1fr))] sm:gap-8',
+              ].join(' ')}
+            >
               {sponsors.length > 0 ? (
                 sponsors.map((s) => (
                   <div
                     key={s.companyName}
-                    className="opacity-70 transition hover:opacity-100"
                     title={s.companyName}
+                    className={[
+                      'w-full',
+                      sponsors.length === 1 ? 'max-w-sm' : '',
+                    ].join(' ')}
                   >
-                    <img
-                      src={publicStaticUrl(s.logoUrl || '')}
-                      alt={s.companyName}
-                      className="h-14 w-auto max-w-[120px] object-contain"
-                    />
+                    <div className="flex flex-col items-center rounded-2xl bg-surface/40 p-6 shadow-sm">
+                      <div className="flex h-20 w-20 items-center justify-center rounded-2xl bg-white shadow-sm ring-1 ring-slate-200 sm:h-24 sm:w-24">
+                        {s.logoUrl ? (
+                          <img
+                            src={publicStaticUrl(s.logoUrl)}
+                            alt={s.companyName}
+                            className="h-14 w-14 object-contain sm:h-16 sm:w-16"
+                            loading="lazy"
+                            decoding="async"
+                          />
+                        ) : (
+                          <span className="text-lg font-bold text-slate-400">
+                            {s.companyName.slice(0, 2).toUpperCase()}
+                          </span>
+                        )}
+                      </div>
+
+                      <div className="mt-4 text-center">
+                        <p className="text-base font-semibold text-slate-900">
+                          {s.companyName}
+                        </p>
+                      </div>
+                    </div>
                   </div>
                 ))
               ) : (
-                <p className="col-span-full text-center text-sm text-slate-500">
+                <p className="text-center text-sm text-slate-500">
                   {t.sponsorNoSponsors}
                 </p>
               )}

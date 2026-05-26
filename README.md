@@ -6,7 +6,7 @@ This is a code bundle for Sports App Landing Page for Healthy Way (Vite + React)
 
 ```bash
 npm ci
-cp .env.example .env   # optional; defaults API to http://localhost:8080
+cp .env.example .env   # optional; API calls use same-origin /api (Vite proxy) by default
 npm run dev
 ```
 
@@ -37,4 +37,8 @@ GitHub Actions workflows:
 - `main` — install, build, SonarCloud, deploy on the self-hosted runner
 
 Deploy syncs this repo to `~/healthy-way/landing` on the Virtech VM and rebuilds the `landing` Docker Compose service.
+
+**Production:** do not set `VITE_API_BASE_URL` at build time. The brand portal must call `/api/v1/...` on the same public host as `/landing/` (root nginx proxies `/api` to the backend). A build with `http://localhost:8080` baked in breaks registration for everyone except your machine and triggers `brandToken` cookie errors in the browser.
+
+On the API server, set `LANDING_FRONTEND_URL` to the browser origin of the landing (e.g. `http://nattech.fib.upc.edu:8080` with path `/landing/`, origin without path).
   

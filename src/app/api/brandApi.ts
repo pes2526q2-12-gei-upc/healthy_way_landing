@@ -1,6 +1,6 @@
-import { API_BASE_URL } from '../config';
+import { apiUrl } from '../config';
 
-const brandBase = `${API_BASE_URL}/api/v1/brands`;
+const brandBase = apiUrl('/api/v1/brands');
 
 function errorMessageFromApiBody(data: unknown): string | null {
   const err = data as { error?: string; details?: unknown };
@@ -124,7 +124,7 @@ export async function cancelBrandPromotion(id: number) {
 }
 
 export async function fetchApprovedSponsors() {
-  const res = await fetch(`${API_BASE_URL}/api/v1/public/promotions/approved`);
+  const res = await fetch(apiUrl('/api/v1/public/promotions/approved'));
   const data = await res.json();
   if (!res.ok) return { items: [] as { companyName: string; logoUrl: string | null }[] };
   return data as { items: { companyName: string; logoUrl: string | null }[] };

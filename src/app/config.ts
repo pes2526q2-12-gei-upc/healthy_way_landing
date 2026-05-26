@@ -1,5 +1,14 @@
-export const API_BASE_URL =
-  import.meta.env.VITE_API_BASE_URL?.replace(/\/$/, '') || 'http://localhost:8080';
+/** Empty in production (same-origin `/api` via root nginx). Set only for local dev without Vite proxy. */
+export const API_BASE_URL = import.meta.env.VITE_API_BASE_URL?.trim().replace(/\/$/, '') || '';
+
+/** Build an API path; uses same-origin when `API_BASE_URL` is unset. */
+export function apiUrl(path: string): string {
+  const normalized = path.startsWith('/') ? path : `/${path}`;
+  if (!API_BASE_URL) {
+    return normalized;
+  }
+  return `${API_BASE_URL}${normalized}`;
+}
 
 /** Shown on the brand portal for support (mailto link). */
 export const ADMIN_CONTACT_EMAIL =
@@ -18,6 +27,5 @@ export function publicStaticUrl(path: string): string {
   if (normalized.startsWith('/api/')) {
     return normalized;
   }
-  const base = API_BASE_URL.replace(/\/$/, '');
-  return `${base}${normalized}`;
+  return apiUrl(normalized);
 }

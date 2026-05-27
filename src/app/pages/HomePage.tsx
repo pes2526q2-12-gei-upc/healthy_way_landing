@@ -10,9 +10,10 @@ import { DownloadButton } from '../components/landing/DownloadButton';
 import { FadeIn } from '../components/landing/FadeIn';
 import { Footer } from '../components/landing/Footer';
 import { PhoneFrame } from '../components/landing/PhoneFrame';
+import { screenshotUrl } from '../screenshots';
 
 export default function HomePage() {
-  const { t } = useLanguage();
+  const { lang, t } = useLanguage();
   const [sponsors, setSponsors] = useState<
     { brandId?: number | null; companyName: string; logoUrl: string | null }[]
   >([]);
@@ -59,7 +60,11 @@ export default function HomePage() {
           </div>
 
           <div className="shrink-0">
-            <PhoneFrame src="screenshots/01-home.png" alt={t.showcase1Title} className="lg:w-[260px]" />
+            <PhoneFrame
+              src={screenshotUrl(lang, '01-home.png')}
+              alt={t.showcase1Title}
+              className="lg:w-[260px]"
+            />
           </div>
         </div>
       </section>

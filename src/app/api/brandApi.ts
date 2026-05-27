@@ -85,6 +85,7 @@ export async function listBrandPromotions() {
 export type BrandPromotionPayload = {
   promotionCode: string;
   description?: string;
+  descriptionLocale?: 'ca' | 'es' | 'en';
   message?: string;
   sportModality: string;
   eligibleWinnerScope: string;

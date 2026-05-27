@@ -21,6 +21,7 @@ import {
   formatDateDdMmYyyy,
   parseDisplayDate,
 } from '../utils/dateFormat';
+import { useLanguage } from '../context/LanguageContext';
 
 type Brand = { id: number; companyName: string; email: string; logoUrl: string | null };
 
@@ -204,6 +205,7 @@ function PromotionDetailDialog({
 }
 
 export default function BrandsPage() {
+  const { lang } = useLanguage();
   const [brand, setBrand] = useState<Brand | null>(null);
   const [loading, setLoading] = useState(true);
   const [authMode, setAuthMode] = useState<'login' | 'register'>('login');
@@ -342,6 +344,7 @@ export default function BrandsPage() {
       }
       payload[k] = v;
     });
+    payload.descriptionLocale = lang;
     return payload as BrandPromotionPayload;
   };
 

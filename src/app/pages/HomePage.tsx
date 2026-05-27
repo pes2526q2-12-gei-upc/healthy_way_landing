@@ -12,7 +12,9 @@ import { PhoneFrame } from '../components/landing/PhoneFrame';
 
 export default function HomePage() {
   const { t } = useLanguage();
-  const [sponsors, setSponsors] = useState<{ companyName: string; logoUrl: string | null }[]>([]);
+  const [sponsors, setSponsors] = useState<
+    { brandId?: number | null; companyName: string; logoUrl: string | null }[]
+  >([]);
 
   useEffect(() => {
     fetchApprovedSponsors()
@@ -159,15 +161,15 @@ export default function HomePage() {
               {sponsors.length > 0 ? (
                 sponsors.map((s) => (
                   <div
-                    key={s.companyName}
+                    key={s.brandId ?? s.companyName}
                     title={s.companyName}
                     className={[
                       'w-full',
                       sponsors.length === 1 ? 'max-w-sm' : '',
                     ].join(' ')}
                   >
-                    <div className="flex flex-col items-center rounded-2xl bg-surface/40 p-6 shadow-sm">
-                      <div className="flex h-20 w-20 items-center justify-center rounded-2xl bg-white shadow-sm ring-1 ring-slate-200 sm:h-24 sm:w-24">
+                    <div className="flex flex-col items-center bg-transparent p-6">
+                      <div className="flex h-20 w-20 items-center justify-center sm:h-24 sm:w-24">
                         {s.logoUrl ? (
                           <img
                             src={publicStaticUrl(s.logoUrl)}

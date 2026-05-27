@@ -2,6 +2,12 @@ import { apiUrl } from '../config';
 
 const brandBase = apiUrl('/api/v1/brands');
 
+type ApprovedSponsor = {
+  brandId?: number | null;
+  companyName: string;
+  logoUrl: string | null;
+};
+
 function errorMessageFromApiBody(data: unknown): string | null {
   const err = data as { error?: string; details?: unknown };
   if (err.error) return err.error;
@@ -127,6 +133,15 @@ export async function cancelBrandPromotion(id: number) {
 export async function fetchApprovedSponsors() {
   const res = await fetch(apiUrl('/api/v1/public/promotions/approved'));
   const data = await res.json();
-  if (!res.ok) return { items: [] as { companyName: string; logoUrl: string | null }[] };
-  return data as { items: { companyName: string; logoUrl: string | null }[] };
+  if (!res.ok) return { items: [] as ApprovedSponsor[] };
+  const typedData = data as { items?: ApprovedSponsor[] };
+  const uniqueSponsors = (typedData.items || []).filter((sponsor, index, allSponsors) => {
+    const sponsorKey = sponsor.brandId ?? sponsor.companyName.trim().toLowerCase();
+    return (
+      allSponsors.findIndex(
+        (candidate) => (candidate.brandId ?? candidate.companyName.trim().toLowerCase()) === sponsorKey,
+      ) === index
+    );
+  });
+  return { items: uniqueSponsors };
 }

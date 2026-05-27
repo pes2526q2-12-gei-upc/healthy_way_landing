@@ -120,7 +120,7 @@ export default function HomePage() {
 
           <div className="grid gap-8 md:grid-cols-3">
             {[
-              { text: t.review1Text, name: 'Kaleb Grove', stars: 5, img: 'cycling.jpeg', occupation: 'Triathlete' },
+              { text: t.review1Text, name: 'Kaleb Grove - Founder', stars: 5, img: 'cycling.jpeg', occupation: 'Triathlete' },
               { text: t.review2Text, name: 'Pau Víctor Gabriel', stars: 5, img: 'runner.jpg', occupation: 'Triathlete' },
               { text: t.review3Text, name: 'Kevin Grove', stars: 4, img: 'mechanic.jpeg', occupation: 'Red Bull Bora Hansgrohe Mechanic' },
             ].map((review, i) => (

@@ -118,15 +118,16 @@ export default function HomePage() {
             </div>
           </FadeIn>
 
-          <div className="grid gap-8 md:grid-cols-3">
+          <div className="flex gap-6 overflow-x-auto pb-4 snap-x snap-mandatory">
             {[
               { text: t.review1Text, name: 'Kaleb Grove - Founder', stars: 5, img: 'cycling.jpeg', occupation: 'Triathlete' },
               { text: t.review2Text, name: 'Pau Víctor Gabriel', stars: 5, img: 'runner.jpg', occupation: 'Triathlete' },
               { text: t.review3Text, name: 'Kevin Grove', stars: 4, img: 'mechanic.jpeg', occupation: 'Red Bull Bora Hansgrohe Mechanic' },
+              { text: t.review4Text, name: 'Rayan Abriak', stars: 5, img: 'runner2.jpg', occupation: 'Triathlete' },
             ].map((review, i) => (
-              <FadeIn key={i} delay={i * 150}>
+              <FadeIn key={i} delay={i * 150} className="snap-start shrink-0 w-72 sm:w-80">
               <article
-                className="flex flex-col items-center rounded-2xl border border-slate-200 bg-surface p-6 text-center"
+                className="flex h-full flex-col items-center rounded-2xl border border-slate-200 bg-surface p-6 text-center"
               >
                 <img
                   src={review.img}

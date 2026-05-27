@@ -40,6 +40,8 @@ export const translations = {
       'Capturar zones amb l’equip és addictiu. Guanyar una temporada i obtenir descomptes de marques és la millor recompensa.',
     review3Text:
       'Les rutes adaptades al temps em van facilitar començar. El suport de la comunitat marca la diferència.',
+    review4Text:
+      'La combinació de rutes intel·ligents i conquesta de territoris és perfecta per al triatló. Una app imprescindible per a qualsevol atleta.',
     sponsorsTitle: 'Marques col·laboradores',
     sponsorsSubtitle: 'Ofereixen promocions per als guanyadors de temporada',
     sponsorNoSponsors: 'Pròximament tindrem marques col·laboradores aquí.',
@@ -178,6 +180,8 @@ export const translations = {
     review2Role: 'Corredora',
     review3Text:
       'Las rutas adaptadas al tiempo me facilitaron empezar. El apoyo de la comunidad marca la diferencia.',
+    review4Text:
+      'La combinación de rutas inteligentes y conquista de territorios es perfecta para el triatlón. Una app imprescindible para cualquier atleta.',
     sponsorsTitle: 'Marcas colaboradoras',
     sponsorsSubtitle: 'Ofrecen promociones para los ganadores de temporada',
     sponsorNoSponsors: 'Próximamente tendremos marcas colaboradoras aquí.',
@@ -315,6 +319,8 @@ export const translations = {
       'Capturing zones with the team is addictive. Winning a season and getting brand discounts is the best reward.',
     review3Text:
       'Weather-based routes made it easy to start. Community support makes the difference.',
+    review4Text:
+      'The combination of smart routes and territory conquest is perfect for triathlon training. An essential app for any serious athlete.',
     sponsorsTitle: 'Partner brands',
     sponsorsSubtitle: 'Provide promotions for season winners',
     sponsorNoSponsors: 'Partner brands coming soon.',

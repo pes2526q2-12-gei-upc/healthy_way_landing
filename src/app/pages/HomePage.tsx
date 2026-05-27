@@ -131,7 +131,7 @@ export default function HomePage() {
                 <img
                   src={review.img}
                   alt={review.role}
-                  className="mb-4 h-20 w-20 rounded-full object-cover ring-2 ring-brand"
+                  className="mb-4 h-28 w-28 rounded-full object-cover ring-2 ring-brand"
                 />
                 <div className="mb-3 flex gap-0.5">
                   {Array.from({ length: 5 }).map((_, si) => (
@@ -201,11 +201,6 @@ export default function HomePage() {
                         )}
                       </div>
 
-                      <div className="mt-4 text-center">
-                        <p className="text-base font-semibold text-slate-900">
-                          {s.companyName}
-                        </p>
-                      </div>
                     </div>
                   </div>
                 ))

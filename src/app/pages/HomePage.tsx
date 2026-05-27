@@ -184,7 +184,6 @@ export default function HomePage() {
                 sponsors.map((s) => (
                   <div
                     key={s.brandId ?? s.companyName}
-                    title={s.companyName}
                     className={[
                       'w-full',
                       sponsors.length === 1 ? 'max-w-sm' : '',
@@ -195,7 +194,7 @@ export default function HomePage() {
                         {s.logoUrl ? (
                           <img
                             src={publicStaticUrl(s.logoUrl)}
-                            alt={s.companyName}
+                            alt=""
                             className="h-14 w-14 object-contain sm:h-16 sm:w-16"
                             loading="lazy"
                             decoding="async"
@@ -206,7 +205,9 @@ export default function HomePage() {
                           </span>
                         )}
                       </div>
-
+                      <p className="mt-3 max-w-[12rem] text-center text-sm font-semibold text-slate-800">
+                        {s.companyName}
+                      </p>
                     </div>
                   </div>
                 ))

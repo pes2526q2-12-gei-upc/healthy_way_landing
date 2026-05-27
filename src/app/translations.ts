@@ -36,13 +36,10 @@ export const translations = {
     reviewsSubtitle: 'Experiències reals dins l’app',
     review1Text:
       'Les alertes de qualitat de l’aire m’han ajudat a evitar rutes dolentes. La competició en equip em manté motivat.',
-    review1Role: 'Ciclista',
     review2Text:
       'Capturar zones amb l’equip és addictiu. Guanyar una temporada i obtenir descomptes de marques és la millor recompensa.',
-    review2Role: 'Corredora',
     review3Text:
       'Les rutes adaptades al temps em van facilitar començar. El suport de la comunitat marca la diferència.',
-    review3Role: 'Runner principiant',
     sponsorsTitle: 'Marques col·laboradores',
     sponsorsSubtitle: 'Ofereixen promocions per als guanyadors de temporada',
     sponsorNoSponsors: 'Pròximament tindrem marques col·laboradores aquí.',
@@ -176,13 +173,11 @@ export const translations = {
     reviewsSubtitle: 'Experiencias reales dentro de la app',
     review1Text:
       'Las alertas de calidad del aire me han ayudado a evitar rutas malas. La competición en equipo me mantiene motivado.',
-    review1Role: 'Ciclista',
     review2Text:
       'Capturar zonas con el equipo es adictivo. Ganar una temporada y obtener descuentos de marcas es la mejor recompensa.',
     review2Role: 'Corredora',
     review3Text:
       'Las rutas adaptadas al tiempo me facilitaron empezar. El apoyo de la comunidad marca la diferencia.',
-    review3Role: 'Runner principiante',
     sponsorsTitle: 'Marcas colaboradoras',
     sponsorsSubtitle: 'Ofrecen promociones para los ganadores de temporada',
     sponsorNoSponsors: 'Próximamente tendremos marcas colaboradoras aquí.',
@@ -316,13 +311,10 @@ export const translations = {
     reviewsSubtitle: 'Real experiences inside the app',
     review1Text:
       'Air quality alerts helped me avoid bad routes. Team competition keeps me motivated.',
-    review1Role: 'Cyclist',
     review2Text:
       'Capturing zones with the team is addictive. Winning a season and getting brand discounts is the best reward.',
-    review2Role: 'Runner',
     review3Text:
       'Weather-based routes made it easy to start. Community support makes the difference.',
-    review3Role: 'Beginner runner',
     sponsorsTitle: 'Partner brands',
     sponsorsSubtitle: 'Provide promotions for season winners',
     sponsorNoSponsors: 'Partner brands coming soon.',

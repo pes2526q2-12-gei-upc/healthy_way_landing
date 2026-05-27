@@ -7,6 +7,7 @@ import { useLanguage } from '../context/LanguageContext';
 import { LanguageSwitcher } from '../components/LanguageSwitcher';
 import { AppJourneyShowcase } from '../components/landing/AppJourneyShowcase';
 import { DownloadButton } from '../components/landing/DownloadButton';
+import { FadeIn } from '../components/landing/FadeIn';
 import { Footer } from '../components/landing/Footer';
 import { PhoneFrame } from '../components/landing/PhoneFrame';
 
@@ -63,40 +64,45 @@ export default function HomePage() {
         </div>
       </section>
 
-      <AppJourneyShowcase />
+      <FadeIn>
+        <AppJourneyShowcase />
+      </FadeIn>
 
       {/* Season rewards */}
-      <section className="border-y border-brand-muted bg-brand-muted/40 py-12 sm:py-14">
-        <div className="mx-auto max-w-3xl px-4 text-center sm:px-6">
-          <h2 className="text-2xl font-bold text-slate-900 sm:text-3xl">{t.rewardsTitle}</h2>
-          <p className="mt-4 text-base leading-relaxed text-slate-700 sm:text-lg">{t.rewardsText}</p>
-        </div>
-      </section>
+      <FadeIn>
+        <section className="border-y border-brand-muted bg-brand-muted/40 py-12 sm:py-14">
+          <div className="mx-auto max-w-3xl px-4 text-center sm:px-6">
+            <h2 className="text-2xl font-bold text-slate-900 sm:text-3xl">{t.rewardsTitle}</h2>
+            <p className="mt-4 text-base leading-relaxed text-slate-700 sm:text-lg">{t.rewardsText}</p>
+          </div>
+        </section>
+      </FadeIn>
 
       {/* Features */}
       <section className="relative z-10 py-16 sm:py-20">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="mb-12 text-center">
-            <h2 className="text-3xl font-bold text-slate-900 sm:text-4xl">{t.featuresTitle}</h2>
-            <p className="mt-2 text-lg text-slate-600">{t.featuresSubtitle}</p>
-          </div>
+          <FadeIn>
+            <div className="mb-12 text-center">
+              <h2 className="text-3xl font-bold text-slate-900 sm:text-4xl">{t.featuresTitle}</h2>
+              <p className="mt-2 text-lg text-slate-600">{t.featuresSubtitle}</p>
+            </div>
+          </FadeIn>
 
           <div className="grid gap-6 md:grid-cols-3">
             {[
               { n: '1', title: t.feature1Title, desc: t.feature1Desc },
               { n: '2', title: t.feature2Title, desc: t.feature2Desc },
               { n: '3', title: t.feature3Title, desc: t.feature3Desc },
-            ].map((f) => (
-              <div
-                key={f.n}
-                className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm"
-              >
-                <span className="inline-flex h-9 w-9 items-center justify-center rounded-lg bg-brand-muted text-sm font-bold text-brand">
-                  {f.n}
-                </span>
-                <h3 className="mt-4 text-xl font-bold text-slate-900">{f.title}</h3>
-                <p className="mt-2 text-slate-600">{f.desc}</p>
-              </div>
+            ].map((f, i) => (
+              <FadeIn key={f.n} delay={i * 150}>
+                <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+                  <span className="inline-flex h-9 w-9 items-center justify-center rounded-lg bg-brand-muted text-sm font-bold text-brand">
+                    {f.n}
+                  </span>
+                  <h3 className="mt-4 text-xl font-bold text-slate-900">{f.title}</h3>
+                  <p className="mt-2 text-slate-600">{f.desc}</p>
+                </div>
+              </FadeIn>
             ))}
           </div>
         </div>
@@ -105,21 +111,28 @@ export default function HomePage() {
       {/* Reviews */}
       <section className="border-y border-slate-200 bg-white py-16 sm:py-20">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="mb-12 text-center">
-            <h2 className="text-3xl font-bold text-slate-900">{t.reviewsTitle}</h2>
-            <p className="mt-2 text-lg text-slate-600">{t.reviewsSubtitle}</p>
-          </div>
+          <FadeIn>
+            <div className="mb-12 text-center">
+              <h2 className="text-3xl font-bold text-slate-900">{t.reviewsTitle}</h2>
+              <p className="mt-2 text-lg text-slate-600">{t.reviewsSubtitle}</p>
+            </div>
+          </FadeIn>
 
           <div className="grid gap-8 md:grid-cols-3">
             {[
-              { text: t.review1Text, role: t.review1Role, stars: 5 },
-              { text: t.review2Text, role: t.review2Role, stars: 5 },
-              { text: t.review3Text, role: t.review3Role, stars: 4 },
+              { text: t.review1Text, role: t.review1Role, stars: 5, img: 'cycling.jpeg', occupation: 'Triathlete' },
+              { text: t.review2Text, role: t.review2Role, stars: 5, img: 'runner.jpg', occupation: 'Triathlete' },
+              { text: t.review3Text, role: t.review3Role, stars: 4, img: 'mechanic.jpeg', occupation: 'Red Bull Bora Hansgrohe Mechanic' },
             ].map((review, i) => (
+              <FadeIn key={i} delay={i * 150}>
               <article
-                key={i}
-                className="flex flex-col rounded-2xl border border-slate-200 bg-surface p-6"
+                className="flex flex-col items-center rounded-2xl border border-slate-200 bg-surface p-6 text-center"
               >
+                <img
+                  src={review.img}
+                  alt={review.role}
+                  className="mb-4 h-20 w-20 rounded-full object-cover ring-2 ring-brand"
+                />
                 <div className="mb-3 flex gap-0.5">
                   {Array.from({ length: 5 }).map((_, si) => (
                     <Star
@@ -134,13 +147,16 @@ export default function HomePage() {
                 </div>
                 <p className="flex-1 text-slate-700">{review.text}</p>
                 <p className="mt-4 text-sm font-medium text-slate-500">{review.role}</p>
+                <p className="mt-1 text-xs font-semibold text-brand">{review.occupation}</p>
               </article>
+              </FadeIn>
             ))}
           </div>
         </div>
       </section>
 
       {/* Sponsors */}
+      <FadeIn>
       <section className="py-16 sm:py-20">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="mb-10 text-center">
@@ -211,8 +227,10 @@ export default function HomePage() {
           </div>
         </div>
       </section>
+      </FadeIn>
 
       {/* CTA */}
+      <FadeIn>
       <section className="bg-brand py-16 sm:py-20">
         <div className="mx-auto max-w-3xl px-4 text-center sm:px-6">
           <h2 className="text-3xl font-bold text-white sm:text-4xl">{t.ctaTitle}</h2>
@@ -222,6 +240,7 @@ export default function HomePage() {
           </div>
         </div>
       </section>
+      </FadeIn>
 
       <Footer />
     </div>

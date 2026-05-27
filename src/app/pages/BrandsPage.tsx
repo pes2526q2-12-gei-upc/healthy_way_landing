@@ -22,6 +22,13 @@ import {
   parseDisplayDate,
 } from '../utils/dateFormat';
 import { useLanguage } from '../context/LanguageContext';
+import { LanguageSwitcher } from '../components/LanguageSwitcher';
+import {
+  resolveLocalizedDescription,
+  type PromotionDescriptionI18n,
+  type PromotionLocale,
+} from '../utils/promotionI18n';
+import type { Language } from '../translations';
 
 type Brand = { id: number; companyName: string; email: string; logoUrl: string | null };
 
@@ -29,6 +36,7 @@ type Promotion = {
   id: number;
   promotionCode: string | null;
   description: string | null;
+  descriptionI18n?: PromotionDescriptionI18n | null;
   message: string | null;
   status: string;
   sportModality: string;
@@ -57,25 +65,6 @@ const statusStyles: Record<string, string> = {
   changes_requested: 'bg-orange-50 text-orange-900 ring-orange-200',
 };
 
-const statusLabelsCa: Record<string, string> = {
-  pending: 'Pendent',
-  approved: 'Aprovada',
-  rejected: 'Rebutjada',
-  changes_requested: 'Canvis sol·licitats',
-};
-
-const sportLabels: Record<string, string> = {
-  running: 'Running',
-  cycling: 'Ciclisme',
-  both: 'Running i ciclisme',
-};
-
-const scopeLabels: Record<string, string> = {
-  individual: 'Individual',
-  team: 'Equip',
-  both: 'Individual i equip',
-};
-
 const inputClass =
   'w-full rounded-lg border border-slate-200 bg-white px-4 py-2.5 text-slate-900 transition focus:border-brand focus:outline-none focus:ring-2 focus:ring-brand/20';
 
@@ -85,9 +74,19 @@ const btnPrimary =
 const btnSecondary =
   'rounded-lg border border-slate-200 bg-white px-5 py-2.5 text-sm font-semibold text-slate-700 transition hover:bg-slate-50';
 
+function displayDescription(promo: Promotion, lang: Language): string | null {
+  return resolveLocalizedDescription(
+    promo.descriptionI18n,
+    lang as PromotionLocale,
+    promo.description,
+  );
+}
+
 function StatusPill({ status }: { status: string }) {
+  const { t } = useLanguage();
   const cls = statusStyles[status] || 'bg-slate-50 text-slate-700 ring-slate-200';
-  const label = statusLabelsCa[status] || status.replace(/_/g, ' ');
+  const labels = t.brands.status as Record<string, string>;
+  const label = labels[status] || status.replace(/_/g, ' ');
   return (
     <span className={`inline-flex rounded-full px-3 py-1 text-xs font-medium ring-1 ${cls}`}>
       {label}
@@ -104,10 +103,11 @@ function formatPromoPeriod(start: string | null, end: string | null) {
 }
 
 function AdminContactBanner() {
+  const { t } = useLanguage();
   if (!ADMIN_CONTACT_EMAIL) return null;
   return (
     <p className="rounded-lg border border-brand-muted bg-brand-muted/50 px-4 py-3 text-sm text-slate-700">
-      <span className="font-medium text-slate-900">Necessites ajuda?</span>{' '}
+      <span className="font-medium text-slate-900">{t.brands.helpPrefix}</span>{' '}
       <a
         href={`mailto:${ADMIN_CONTACT_EMAIL}`}
         className="font-semibold text-brand underline underline-offset-2 hover:text-brand-hover"
@@ -125,6 +125,11 @@ function PromotionDetailDialog({
   promotion: Promotion;
   onClose: () => void;
 }) {
+  const { lang, t } = useLanguage();
+  const sportLabels = t.brands.sportLabels as Record<string, string>;
+  const scopeLabels = t.brands.scopeLabels as Record<string, string>;
+  const description = displayDescription(promotion, lang);
+
   return (
     <div
       className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/40 p-4"
@@ -140,7 +145,7 @@ function PromotionDetailDialog({
         <div className="mb-5 flex items-start justify-between gap-3">
           <div>
             <h3 id="promo-detail-title" className="text-lg font-bold text-slate-900">
-              Detalls de la promoció
+              {t.brands.detailTitle}
             </h3>
             <p className="mt-1 font-mono text-sm text-slate-600">{promotion.promotionCode || '—'}</p>
           </div>
@@ -148,7 +153,7 @@ function PromotionDetailDialog({
             type="button"
             onClick={onClose}
             className="rounded-lg border border-slate-200 p-2 text-slate-600 hover:bg-slate-50"
-            aria-label="Tancar"
+            aria-label={t.brands.closeAria}
           >
             <X className="h-5 w-5" />
           </button>
@@ -160,27 +165,29 @@ function PromotionDetailDialog({
 
         <dl className="space-y-3 text-sm text-slate-700">
           <div>
-            <dt className="font-semibold text-slate-900">Descripció (usuaris)</dt>
-            <dd className="mt-0.5 whitespace-pre-wrap">{promotion.description || '—'}</dd>
+            <dt className="font-semibold text-slate-900">{t.brands.descriptionUsers}</dt>
+            <dd className="mt-0.5 whitespace-pre-wrap">{description || '—'}</dd>
           </div>
           <div>
-            <dt className="font-semibold text-slate-900">Missatge (admin)</dt>
+            <dt className="font-semibold text-slate-900">{t.brands.messageAdmin}</dt>
             <dd className="mt-0.5 whitespace-pre-wrap">{promotion.message || '—'}</dd>
           </div>
           <div className="grid gap-3 sm:grid-cols-2">
             <div>
-              <dt className="font-semibold text-slate-900">Esport</dt>
-              <dd className="mt-0.5">{sportLabels[promotion.sportModality] || promotion.sportModality}</dd>
+              <dt className="font-semibold text-slate-900">{t.brands.sport}</dt>
+              <dd className="mt-0.5">
+                {sportLabels[promotion.sportModality] || promotion.sportModality}
+              </dd>
             </div>
             <div>
-              <dt className="font-semibold text-slate-900">Àmbit guanyadors</dt>
+              <dt className="font-semibold text-slate-900">{t.brands.winnerScope}</dt>
               <dd className="mt-0.5">
                 {scopeLabels[promotion.eligibleWinnerScope] || promotion.eligibleWinnerScope}
               </dd>
             </div>
           </div>
           <div>
-            <dt className="font-semibold text-slate-900">Període de validesa</dt>
+            <dt className="font-semibold text-slate-900">{t.brands.validityPeriod}</dt>
             <dd className="mt-0.5">
               {formatPromoPeriod(promotion.validity_start_date, promotion.validity_end_date)}
             </dd>
@@ -189,14 +196,14 @@ function PromotionDetailDialog({
 
         {promotion.adminFeedback ? (
           <p className="mt-4 rounded-lg border border-orange-200 bg-orange-50 px-3 py-2 text-sm text-orange-900">
-            <span className="font-semibold">Feedback de l’admin: </span>
+            <span className="font-semibold">{t.brands.adminFeedback} </span>
             {promotion.adminFeedback}
           </p>
         ) : null}
 
         <div className="mt-6 flex justify-end">
           <button type="button" onClick={onClose} className={btnSecondary}>
-            Tancar
+            {t.brands.close}
           </button>
         </div>
       </div>
@@ -205,7 +212,9 @@ function PromotionDetailDialog({
 }
 
 export default function BrandsPage() {
-  const { lang } = useLanguage();
+  const { lang, t } = useLanguage();
+  const sportLabels = t.brands.sportLabels as Record<string, string>;
+  const scopeLabels = t.brands.scopeLabels as Record<string, string>;
   const [brand, setBrand] = useState<Brand | null>(null);
   const [loading, setLoading] = useState(true);
   const [authMode, setAuthMode] = useState<'login' | 'register'>('login');
@@ -240,7 +249,7 @@ export default function BrandsPage() {
         await loadPromotions();
       } catch (err) {
         setPromotions([]);
-        setError(err instanceof Error ? err.message : 'No s’han pogut carregar les promocions');
+        setError(err instanceof Error ? err.message : t.brands.errors.loadPromotions);
       }
     } catch {
       setBrand(null);
@@ -265,11 +274,11 @@ export default function BrandsPage() {
     setError('');
     if (authMode === 'register') {
       if (authForm.password !== authForm.passwordConfirm) {
-        setError('Les contrasenyes no coincideixen.');
+        setError(t.brands.errors.passwordMismatch);
         return;
       }
       if (!registerLogoFile) {
-        setError('Cal pujar el logo de l’empresa (PNG, JPEG, WebP o GIF).');
+        setError(t.brands.errors.logoRequired);
         return;
       }
     }
@@ -296,10 +305,10 @@ export default function BrandsPage() {
         setDashTab('list');
       } catch (err) {
         setPromotions([]);
-        setError(err instanceof Error ? err.message : 'No s’han pogut carregar les promocions');
+        setError(err instanceof Error ? err.message : t.brands.errors.loadPromotions);
       }
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Error d’autenticació');
+      setError(err instanceof Error ? err.message : t.brands.errors.auth);
     } finally {
       setAuthBusy(false);
     }
@@ -313,12 +322,12 @@ export default function BrandsPage() {
       setPromotions([]);
       discardEdit();
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'No s’ha pogut tancar la sessió');
+      setError(err instanceof Error ? err.message : t.brands.errors.logout);
     }
   };
 
   const handleDeleteAccount = async () => {
-    if (!confirm('Eliminar el compte i totes les promocions? Aquesta acció no es pot desfer.')) {
+    if (!confirm(t.brands.confirmDeleteAccount)) {
       return;
     }
     setError('');
@@ -327,9 +336,9 @@ export default function BrandsPage() {
       setBrand(null);
       setPromotions([]);
       discardEdit();
-      setMessage('Compte eliminat.');
+      setMessage(t.brands.messages.accountDeleted);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'No s’ha pogut eliminar el compte');
+      setError(err instanceof Error ? err.message : t.brands.errors.deleteAccount);
     }
   };
 
@@ -353,34 +362,34 @@ export default function BrandsPage() {
     setError('');
     setMessage('');
     if (!promoForm.validity_start_date.trim() || !promoForm.validity_end_date.trim()) {
-      setError('Cal indicar el període de validesa (des de i fins).');
+      setError(t.brands.errors.validityRequired);
       return;
     }
     const start = parseDisplayDate(promoForm.validity_start_date);
     const end = parseDisplayDate(promoForm.validity_end_date);
     if (!start || !end) {
-      setError(`Les dates han de tenir el format ${DATE_DISPLAY_PLACEHOLDER}.`);
+      setError(`${t.brands.errors.dateFormat} ${DATE_DISPLAY_PLACEHOLDER}.`);
       return;
     }
     if (start > end) {
-      setError('La data «fins» ha de ser igual o posterior a «des de».');
+      setError(t.brands.errors.endBeforeStart);
       return;
     }
     try {
       const payload = buildPromoPayload();
       if (editingId) {
         await updateBrandPromotion(editingId, payload);
-        setMessage('Promoció actualitzada i reenviada per revisió.');
+        setMessage(t.brands.messages.promotionUpdated);
       } else {
         await createBrandPromotion(payload);
-        setMessage('Promoció enviada per revisió.');
+        setMessage(t.brands.messages.promotionSubmitted);
       }
       setPromoForm(emptyPromoForm);
       setEditingId(null);
       setDashTab('list');
       await loadPromotions();
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'No s’ha pogut guardar la promoció');
+      setError(err instanceof Error ? err.message : t.brands.errors.savePromotion);
     }
   };
 
@@ -389,7 +398,7 @@ export default function BrandsPage() {
     setEditingId(p.id);
     setPromoForm({
       promotionCode: p.promotionCode || '',
-      description: p.description || '',
+      description: displayDescription(p, lang) || '',
       message: p.message || '',
       sportModality: p.sportModality,
       eligibleWinnerScope: p.eligibleWinnerScope,
@@ -403,22 +412,19 @@ export default function BrandsPage() {
   };
 
   const handleCancelPromotion = async (p: Promotion) => {
-    if (
-      !confirm(
-        `Cancel·lar la promoció «${p.promotionCode || p.id}»? Aquesta acció no es pot desfer.`,
-      )
-    ) {
+    const code = p.promotionCode || String(p.id);
+    if (!confirm(t.brands.confirmCancelPromotion.replace('{code}', code))) {
       return;
     }
     setError('');
     setMessage('');
     try {
       await cancelBrandPromotion(p.id);
-      setMessage('Promoció cancel·lada.');
+      setMessage(t.brands.messages.promotionCancelled);
       if (editingId === p.id) discardEdit();
       await loadPromotions();
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'No s’ha pogut cancel·lar la promoció');
+      setError(err instanceof Error ? err.message : t.brands.errors.cancelPromotion);
     }
   };
 
@@ -427,7 +433,7 @@ export default function BrandsPage() {
       <div className="flex min-h-screen items-center justify-center bg-surface">
         <div className="flex flex-col items-center gap-3 text-slate-600">
           <div className="h-9 w-9 animate-spin rounded-full border-4 border-brand-muted border-t-brand" />
-          <p className="text-sm font-medium">Carregant portal de marques…</p>
+          <p className="text-sm font-medium">{t.brands.loading}</p>
         </div>
       </div>
     );
@@ -437,9 +443,12 @@ export default function BrandsPage() {
     return (
       <div className="min-h-screen bg-surface px-4 py-12 sm:py-16">
         <div className="mx-auto max-w-md">
-          <Link to="/" className="text-sm font-medium text-brand hover:text-brand-hover">
-            ← Tornar a l’inici
-          </Link>
+          <div className="mb-4 flex items-center justify-between gap-3">
+            <Link to="/" className="text-sm font-medium text-brand hover:text-brand-hover">
+              {t.brands.backToHome}
+            </Link>
+            <LanguageSwitcher variant="light" />
+          </div>
 
           <div className="mt-6 rounded-2xl border border-slate-200 bg-white p-8 shadow-sm">
             <img
@@ -447,10 +456,8 @@ export default function BrandsPage() {
               alt="Healthy Way"
               className="mb-4 h-12 w-auto"
             />
-            <h1 className="text-2xl font-bold text-slate-900">Portal de marques</h1>
-            <p className="mt-2 text-sm text-slate-600">
-              Registra’t, envia promocions per revisió i apareix als guanyadors de la temporada.
-            </p>
+            <h1 className="text-2xl font-bold text-slate-900">{t.brands.portalTitle}</h1>
+            <p className="mt-2 text-sm text-slate-600">{t.brands.portalSubtitle}</p>
 
             <div className="mb-6 mt-6">
               <AdminContactBanner />
@@ -473,7 +480,7 @@ export default function BrandsPage() {
                       : 'text-slate-600 hover:text-slate-900'
                   }`}
                 >
-                  {mode === 'login' ? 'Iniciar sessió' : 'Registrar-se'}
+                  {mode === 'login' ? t.brands.login : t.brands.register}
                 </button>
               ))}
             </div>
@@ -487,7 +494,9 @@ export default function BrandsPage() {
             <form onSubmit={handleAuth} className="space-y-4">
               {authMode === 'register' ? (
                 <div>
-                  <label className="mb-1.5 block text-sm font-medium text-slate-700">Empresa</label>
+                  <label className="mb-1.5 block text-sm font-medium text-slate-700">
+                    {t.brands.company}
+                  </label>
                   <input
                     required
                     className={inputClass}
@@ -497,7 +506,9 @@ export default function BrandsPage() {
                 </div>
               ) : null}
               <div>
-                <label className="mb-1.5 block text-sm font-medium text-slate-700">Correu</label>
+                <label className="mb-1.5 block text-sm font-medium text-slate-700">
+                  {t.brands.email}
+                </label>
                 <input
                   type="email"
                   required
@@ -507,7 +518,9 @@ export default function BrandsPage() {
                 />
               </div>
               <div>
-                <label className="mb-1.5 block text-sm font-medium text-slate-700">Contrasenya</label>
+                <label className="mb-1.5 block text-sm font-medium text-slate-700">
+                  {t.brands.password}
+                </label>
                 <input
                   type="password"
                   required
@@ -521,7 +534,7 @@ export default function BrandsPage() {
                 <>
                   <div>
                     <label className="mb-1.5 block text-sm font-medium text-slate-700">
-                      Confirmar contrasenya
+                      {t.brands.confirmPassword}
                     </label>
                     <input
                       type="password"
@@ -536,7 +549,7 @@ export default function BrandsPage() {
                   </div>
                   <div>
                     <label className="mb-1.5 block text-sm font-medium text-slate-700">
-                      Logo de l’empresa *
+                      {t.brands.companyLogo}
                     </label>
                     <input
                       type="file"
@@ -545,16 +558,16 @@ export default function BrandsPage() {
                       className="block w-full text-sm text-slate-600 file:mr-4 file:rounded-lg file:border-0 file:bg-brand-muted file:px-4 file:py-2 file:text-sm file:font-semibold file:text-brand hover:file:bg-brand-muted/80"
                       onChange={(e) => setRegisterLogoFile(e.target.files?.[0] ?? null)}
                     />
-                    <p className="mt-1 text-xs text-slate-500">PNG, JPEG, WebP o GIF (màx. 3 MB).</p>
+                    <p className="mt-1 text-xs text-slate-500">{t.brands.logoHint}</p>
                   </div>
                 </>
               ) : null}
               <button type="submit" disabled={authBusy} className={`w-full ${btnPrimary}`}>
                 {authBusy
-                  ? 'Un moment…'
+                  ? t.brands.authBusy
                   : authMode === 'register'
-                    ? 'Crear compte'
-                    : 'Entrar al panell'}
+                    ? t.brands.createAccount
+                    : t.brands.enterPanel}
               </button>
             </form>
           </div>
@@ -581,22 +594,23 @@ export default function BrandsPage() {
             )}
             <div>
               <Link to="/" className="text-xs font-medium text-brand hover:underline">
-                ← Inici
+                {t.brands.homeLink}
               </Link>
               <h1 className="text-lg font-bold text-slate-900 sm:text-xl">{brand.companyName}</h1>
               <p className="text-sm text-slate-500">{brand.email}</p>
             </div>
           </div>
-          <div className="flex flex-wrap gap-2">
+          <div className="flex flex-wrap items-center gap-2">
+            <LanguageSwitcher variant="light" />
             <button type="button" onClick={handleLogout} className={btnSecondary}>
-              Sortir
+              {t.brands.logout}
             </button>
             <button
               type="button"
               onClick={handleDeleteAccount}
               className="rounded-lg bg-rose-600 px-4 py-2 text-sm font-semibold text-white hover:bg-rose-700"
             >
-              Eliminar compte
+              {t.brands.deleteAccount}
             </button>
           </div>
         </div>
@@ -627,7 +641,7 @@ export default function BrandsPage() {
               dashTab === 'list' ? 'bg-brand text-white' : 'text-slate-600 hover:bg-slate-50'
             }`}
           >
-            Les meves promocions
+            {t.brands.myPromotions}
           </button>
           <button
             type="button"
@@ -640,7 +654,7 @@ export default function BrandsPage() {
               dashTab === 'form' ? 'bg-brand text-white' : 'text-slate-600 hover:bg-slate-50'
             }`}
           >
-            {editingId ? 'Editar promoció' : 'Nova promoció'}
+            {editingId ? t.brands.editPromotion : t.brands.newPromotion}
           </button>
         </div>
 
@@ -648,7 +662,7 @@ export default function BrandsPage() {
           <section className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
             {editingId ? (
               <p className="mb-4 rounded-lg bg-brand-muted px-4 py-2 text-sm text-slate-800">
-                Editant promoció{' '}
+                {t.brands.editingPromotion}{' '}
                 <span className="font-mono font-semibold">
                   {promoForm.promotionCode || `#${editingId}`}
                 </span>
@@ -658,19 +672,17 @@ export default function BrandsPage() {
                   onClick={discardEdit}
                   className="font-semibold text-brand hover:underline"
                 >
-                  Descartar edició
+                  {t.brands.discardEdit}
                 </button>
               </p>
             ) : (
-              <p className="mb-4 text-sm text-slate-600">
-                Les promocions passen per revisió abans de publicar-se a l’app.
-              </p>
+              <p className="mb-4 text-sm text-slate-600">{t.brands.reviewNotice}</p>
             )}
 
             <form onSubmit={submitPromotion} className="grid gap-4 sm:grid-cols-2">
               <div className="sm:col-span-2">
                 <label className="mb-1.5 block text-sm font-medium text-slate-700">
-                  Codi de promoció *
+                  {t.brands.promotionCode}
                 </label>
                 <input
                   required
@@ -681,7 +693,7 @@ export default function BrandsPage() {
               </div>
               <div>
                 <label className="mb-1.5 block text-sm font-medium text-slate-700">
-                  Descripció (usuaris)
+                  {t.brands.descriptionUsers}
                 </label>
                 <textarea
                   className={inputClass}
@@ -692,7 +704,7 @@ export default function BrandsPage() {
               </div>
               <div>
                 <label className="mb-1.5 block text-sm font-medium text-slate-700">
-                  Missatge (admin)
+                  {t.brands.messageAdmin}
                 </label>
                 <textarea
                   className={inputClass}
@@ -702,20 +714,22 @@ export default function BrandsPage() {
                 />
               </div>
               <div>
-                <label className="mb-1.5 block text-sm font-medium text-slate-700">Esport</label>
+                <label className="mb-1.5 block text-sm font-medium text-slate-700">
+                  {t.brands.sport}
+                </label>
                 <select
                   className={inputClass}
                   value={promoForm.sportModality}
                   onChange={(e) => setPromoForm((f) => ({ ...f, sportModality: e.target.value }))}
                 >
-                  <option value="running">Running</option>
-                  <option value="cycling">Ciclisme</option>
-                  <option value="both">Running i ciclisme</option>
+                  <option value="running">{sportLabels.running}</option>
+                  <option value="cycling">{sportLabels.cycling}</option>
+                  <option value="both">{sportLabels.both}</option>
                 </select>
               </div>
               <div>
                 <label className="mb-1.5 block text-sm font-medium text-slate-700">
-                  Àmbit guanyadors
+                  {t.brands.winnerScope}
                 </label>
                 <select
                   className={inputClass}
@@ -724,14 +738,14 @@ export default function BrandsPage() {
                     setPromoForm((f) => ({ ...f, eligibleWinnerScope: e.target.value }))
                   }
                 >
-                  <option value="individual">Individual</option>
-                  <option value="team">Equip</option>
-                  <option value="both">Individual i equip</option>
+                  <option value="individual">{scopeLabels.individual}</option>
+                  <option value="team">{scopeLabels.team}</option>
+                  <option value="both">{scopeLabels.both}</option>
                 </select>
               </div>
               <div>
                 <label className="mb-1.5 block text-sm font-medium text-slate-700">
-                  Vàlid des de *
+                  {t.brands.validFrom}
                 </label>
                 <input
                   type="text"
@@ -750,7 +764,7 @@ export default function BrandsPage() {
               </div>
               <div>
                 <label className="mb-1.5 block text-sm font-medium text-slate-700">
-                  Vàlid fins *
+                  {t.brands.validTo}
                 </label>
                 <input
                   type="text"
@@ -769,11 +783,11 @@ export default function BrandsPage() {
               </div>
               <div className="flex flex-wrap gap-2 sm:col-span-2">
                 <button type="submit" className={btnPrimary}>
-                  {editingId ? 'Actualitzar' : 'Enviar per revisió'}
+                  {editingId ? t.brands.update : t.brands.submitForReview}
                 </button>
                 {editingId ? (
                   <button type="button" onClick={discardEdit} className={btnSecondary}>
-                    Cancel·lar edició
+                    {t.brands.cancelEdit}
                   </button>
                 ) : null}
               </div>
@@ -782,7 +796,7 @@ export default function BrandsPage() {
         ) : (
           <section className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
             <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
-              <h2 className="text-lg font-bold text-slate-900">Les teves promocions</h2>
+              <h2 className="text-lg font-bold text-slate-900">{t.brands.yourPromotions}</h2>
               <button
                 type="button"
                 onClick={() => {
@@ -791,68 +805,71 @@ export default function BrandsPage() {
                 }}
                 className={btnPrimary}
               >
-                Nova promoció
+                {t.brands.newPromotion}
               </button>
             </div>
 
             {promotions.length === 0 ? (
               <p className="rounded-lg border border-dashed border-slate-200 bg-slate-50 px-4 py-8 text-center text-sm text-slate-500">
-                Encara no tens promocions. Crea la primera des de «Nova promoció».
+                {t.brands.noPromotions}
               </p>
             ) : (
               <ul className="space-y-3">
-                {promotions.map((p) => (
-                  <li
-                    key={p.id}
-                    className="rounded-xl border border-slate-100 bg-slate-50/50 p-4"
-                  >
-                    <div className="flex flex-wrap items-start justify-between gap-3">
-                      <div>
-                        <p className="font-semibold text-slate-900">{p.promotionCode || '—'}</p>
-                        {p.description ? (
-                          <p className="mt-1 line-clamp-2 text-sm text-slate-600">{p.description}</p>
-                        ) : null}
-                        <p className="mt-1 text-xs text-slate-500">
-                          {formatPromoPeriod(p.validity_start_date, p.validity_end_date)}
-                        </p>
+                {promotions.map((p) => {
+                  const desc = displayDescription(p, lang);
+                  return (
+                    <li
+                      key={p.id}
+                      className="rounded-xl border border-slate-100 bg-slate-50/50 p-4"
+                    >
+                      <div className="flex flex-wrap items-start justify-between gap-3">
+                        <div>
+                          <p className="font-semibold text-slate-900">{p.promotionCode || '—'}</p>
+                          {desc ? (
+                            <p className="mt-1 line-clamp-2 text-sm text-slate-600">{desc}</p>
+                          ) : null}
+                          <p className="mt-1 text-xs text-slate-500">
+                            {formatPromoPeriod(p.validity_start_date, p.validity_end_date)}
+                          </p>
+                        </div>
+                        <StatusPill status={p.status} />
                       </div>
-                      <StatusPill status={p.status} />
-                    </div>
-                    {p.adminFeedback ? (
-                      <p className="mt-3 rounded-lg border border-orange-200 bg-orange-50 px-3 py-2 text-sm text-orange-900">
-                        <span className="font-semibold">Feedback: </span>
-                        {p.adminFeedback}
-                      </p>
-                    ) : null}
-                    <div className="mt-3 flex flex-wrap gap-4 text-sm">
-                      <button
-                        type="button"
-                        onClick={() => setDetailPromotion(p)}
-                        className="font-semibold text-slate-700 hover:text-brand"
-                      >
-                        Veure detalls
-                      </button>
-                      {(p.status === 'pending' || p.status === 'changes_requested') && (
-                        <>
-                          <button
-                            type="button"
-                            onClick={() => startEdit(p)}
-                            className="font-semibold text-brand hover:underline"
-                          >
-                            Editar
-                          </button>
-                          <button
-                            type="button"
-                            onClick={() => handleCancelPromotion(p)}
-                            className="font-semibold text-rose-600 hover:underline"
-                          >
-                            Cancel·lar
-                          </button>
-                        </>
-                      )}
-                    </div>
-                  </li>
-                ))}
+                      {p.adminFeedback ? (
+                        <p className="mt-3 rounded-lg border border-orange-200 bg-orange-50 px-3 py-2 text-sm text-orange-900">
+                          <span className="font-semibold">{t.brands.feedback} </span>
+                          {p.adminFeedback}
+                        </p>
+                      ) : null}
+                      <div className="mt-3 flex flex-wrap gap-4 text-sm">
+                        <button
+                          type="button"
+                          onClick={() => setDetailPromotion(p)}
+                          className="font-semibold text-slate-700 hover:text-brand"
+                        >
+                          {t.brands.viewDetails}
+                        </button>
+                        {(p.status === 'pending' || p.status === 'changes_requested') && (
+                          <>
+                            <button
+                              type="button"
+                              onClick={() => startEdit(p)}
+                              className="font-semibold text-brand hover:underline"
+                            >
+                              {t.brands.edit}
+                            </button>
+                            <button
+                              type="button"
+                              onClick={() => handleCancelPromotion(p)}
+                              className="font-semibold text-rose-600 hover:underline"
+                            >
+                              {t.brands.cancel}
+                            </button>
+                          </>
+                        )}
+                      </div>
+                    </li>
+                  );
+                })}
               </ul>
             )}
           </section>

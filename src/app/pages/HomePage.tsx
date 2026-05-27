@@ -3,14 +3,15 @@ import { Link } from 'react-router';
 import { Star } from 'lucide-react';
 import { fetchApprovedSponsors } from '../api/brandApi';
 import { publicStaticUrl } from '../config';
-import { useLanguage, LANGUAGES, LANG_LABELS } from '../context/LanguageContext';
+import { useLanguage } from '../context/LanguageContext';
+import { LanguageSwitcher } from '../components/LanguageSwitcher';
 import { AppJourneyShowcase } from '../components/landing/AppJourneyShowcase';
 import { DownloadButton } from '../components/landing/DownloadButton';
 import { Footer } from '../components/landing/Footer';
 import { PhoneFrame } from '../components/landing/PhoneFrame';
 
 export default function HomePage() {
-  const { lang, setLang, t } = useLanguage();
+  const { t } = useLanguage();
   const [sponsors, setSponsors] = useState<{ companyName: string; logoUrl: string | null }[]>([]);
 
   useEffect(() => {
@@ -29,22 +30,7 @@ export default function HomePage() {
       <section className="relative overflow-hidden bg-brand">
         <div className="absolute inset-0 bg-gradient-to-br from-brand via-brand to-brand-hover opacity-95" />
 
-        <div className="absolute top-4 right-4 z-20 flex gap-1">
-          {LANGUAGES.map((l) => (
-            <button
-              key={l}
-              type="button"
-              onClick={() => setLang(l)}
-              className={`rounded px-3 py-1 text-sm font-semibold transition ${
-                lang === l
-                  ? 'bg-white text-brand shadow'
-                  : 'bg-white/15 text-white hover:bg-white/25'
-              }`}
-            >
-              {LANG_LABELS[l]}
-            </button>
-          ))}
-        </div>
+        <LanguageSwitcher variant="hero" />
 
         <div className="relative mx-auto flex max-w-7xl flex-col items-center gap-10 px-4 py-16 sm:px-6 lg:flex-row lg:items-center lg:justify-between lg:gap-12 lg:py-20 lg:px-8">
           <div className="max-w-xl text-center text-white lg:text-left">

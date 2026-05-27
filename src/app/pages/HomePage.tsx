@@ -120,9 +120,9 @@ export default function HomePage() {
 
           <div className="grid gap-8 md:grid-cols-3">
             {[
-              { text: t.review1Text, role: t.review1Role, stars: 5, img: 'cycling.jpeg', occupation: 'Triathlete' },
-              { text: t.review2Text, role: t.review2Role, stars: 5, img: 'runner.jpg', occupation: 'Triathlete' },
-              { text: t.review3Text, role: t.review3Role, stars: 4, img: 'mechanic.jpeg', occupation: 'Red Bull Bora Hansgrohe Mechanic' },
+              { text: t.review1Text, name: 'Kaleb Grove', stars: 5, img: 'cycling.jpeg', occupation: 'Triathlete' },
+              { text: t.review2Text, name: 'Pau Víctor Gabriel', stars: 5, img: 'runner.jpg', occupation: 'Triathlete' },
+              { text: t.review3Text, name: 'Kevin Grove', stars: 4, img: 'mechanic.jpeg', occupation: 'Red Bull Bora Hansgrohe Mechanic' },
             ].map((review, i) => (
               <FadeIn key={i} delay={i * 150}>
               <article
@@ -146,7 +146,7 @@ export default function HomePage() {
                   ))}
                 </div>
                 <p className="flex-1 text-slate-700">{review.text}</p>
-                <p className="mt-4 text-sm font-medium text-slate-500">{review.role}</p>
+                <p className="mt-4 text-sm font-semibold text-slate-900">{review.name}</p>
                 <p className="mt-1 text-xs font-semibold text-brand">{review.occupation}</p>
               </article>
               </FadeIn>

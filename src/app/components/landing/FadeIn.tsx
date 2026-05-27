@@ -18,8 +18,11 @@ export function FadeIn({ children, className = '', delay = 0 }: Props) {
       ([entry]) => {
         if (entry.isIntersecting) {
           setVisible(true);
-          observer.disconnect();
+        } else if (entry.boundingClientRect.top > 0) {
+          // Element is below the viewport (user scrolled up) — reset so it animates again on scroll down
+          setVisible(false);
         }
+        // Element above viewport (already passed) — leave visible
       },
       { threshold: 0.1 }
     );
